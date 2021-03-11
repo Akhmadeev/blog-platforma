@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { connect } from 'react-redux';
+import * as action from '../../store/action';
 import './EditProfile.scss';
 import Services from '../../ApiService';
 
-function EditProfile() {
+function EditProfile({get_user}) {
 
   const [status, setStatus] = useState(false)
 
@@ -15,9 +18,11 @@ function EditProfile() {
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     const { username, email, image } = data;
-    apiService.sendEditProfile(email, token, username, image).then(() => {
+    apiService.sendEditProfile(email, token, username, image).then((res) => {
       setStatus(true);
+      get_user(res)
     });
+
   };
 
   if (status) {
@@ -94,4 +99,12 @@ function EditProfile() {
   );
 }
 
-export default EditProfile;
+
+export default connect(null, action)(EditProfile);
+
+EditProfile.defaultProps = {
+  get_user: () => {},
+};
+EditProfile.propTypes = {
+  get_user: PropTypes.func,
+};

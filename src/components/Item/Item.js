@@ -10,7 +10,8 @@ const Item = ({ element }) => {
     const { title, body, favoritesCount, slug, updatedAt } = element;
     const { username, image } = element.author;
 
-    const shortText = (text) => text.split(' ').slice(0, 14).join(' ');
+  const shortText = (text) => text.split(' ').slice(0, 14).join(' ');
+  
 
     return (
       <div className="item" key={slug}>

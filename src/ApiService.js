@@ -70,5 +70,7 @@ export default class Services {
       },
     });
   }
+
+  getTags = () => this.requestApi(`${this.baseUrl}/tags`)
 }
 

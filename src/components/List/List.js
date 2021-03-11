@@ -5,6 +5,7 @@ import { Pagination, Spin, Alert } from 'antd';
 import * as action from '../../store/action';
 import Item from '../Item/Item'
 import './List.scss';
+import Services from '../../ApiService';
 
 const List = ({ arrayItem, edit_page }) => {
   const errorSpin = () => (
@@ -18,6 +19,11 @@ const List = ({ arrayItem, edit_page }) => {
       </Spin>
     </div>
   );
+
+  const apiService = new Services();
+
+  apiService.getTags().then((response) => console.log(response));
+
 
   if (arrayItem.length < 1) return <div>{errorSpin()}</div>;
 

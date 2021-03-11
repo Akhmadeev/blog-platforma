@@ -7,22 +7,22 @@ import './Header.scss';
 import logo from '../List/icon/Rectangle 1.svg'
 import Services from '../../ApiService';
 
-function Header({ delete_user, userStore }) {
-
+function Header({ delete_user, name }) {
   const [user, setUser] = useState({});
 
   const apiService = new Services();
-  
+
   const deleteInfo = () => {
     localStorage.removeItem('token');
     setUser({});
     delete_user();
   };
 
+
+
   const token = localStorage.getItem('token');
 
   const content = () => {
-
     if (!token) {
       return (
         <nav className="navigation_btn">
@@ -39,6 +39,9 @@ function Header({ delete_user, userStore }) {
     if (Object.keys(user).length === 0) apiService.getUser().then((result) => setUser(result.user));
     
     const { username, image } = user;
+
+    if(username !== name.username) apiService.getUser().then((result) => setUser(result.user));
+    
     return (
       <nav className="navigation_btn">
         <Link to="/new-article" className="btn_create_article">
@@ -57,11 +60,12 @@ function Header({ delete_user, userStore }) {
         </Link>
       </nav>
     );
-  }
+  };
+
 
   useEffect(() => {
     content();
-  }, [token, user, userStore]);
+  }, [token]);
 
   return (
     <div className="header">
@@ -79,16 +83,16 @@ function Header({ delete_user, userStore }) {
 
 const mapStateToProps = (state) => ({
   error_reducer: state.error_reducer,
-  userStore: state.user[0]
+  name: state.user[0]
 });
 
 export default connect(mapStateToProps, action)(Header);
 
 Header.defaultProps = {
   delete_user: () => {},
-  userStore: {}
+  name: {},
 };
 Header.propTypes = {
   delete_user: PropTypes.func,
-  userStore: PropTypes.object
+  name: PropTypes.object,
 };
