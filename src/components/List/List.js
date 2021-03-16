@@ -1,31 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Pagination, Spin, Alert } from 'antd';
+import { Pagination} from 'antd';
 import * as action from '../../store/action';
-import Item from '../Item/Item'
+import Item from '../Item/Item';
 import './List.scss';
-import Services from '../../ApiService';
+import SpinErr from '../SpinErr/SpinErr';
 
 const List = ({ arrayItem, edit_page }) => {
-  const errorSpin = () => (
-    <div className="errorSpin">
-      <Spin tip="Loading...">
-        <Alert
-          message="Попробуйте обновить страницу"
-          description="Что-то пошло не так так, мы пробуем в этом разобраться"
-          type="info"
-        />
-      </Spin>
-    </div>
-  );
-
-  const apiService = new Services();
-
-  apiService.getTags().then((response) => console.log(response));
 
 
-  if (arrayItem.length < 1) return <div>{errorSpin()}</div>;
+  if (arrayItem.length < 1) return <div>{SpinErr()}</div>;
 
   return (
     <div>

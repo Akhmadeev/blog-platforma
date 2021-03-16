@@ -8,15 +8,27 @@ import Header from '../Header/Header';
 import List from '../List/List';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
-import ActiveItem from '../ActiveItem/ActiveItem';
+import Article from '../Article/Article';
 import Services from '../../ApiService';
 import CreateArticle from '../CreateArticle/CreateArticle';
 import EditProfile from '../EditProfile/EditProfile';
+import MyArticles from '../myArticles/MyArticles';
+import SpinErr from '../SpinErr/SpinErr';
 
-function App({ add_items, page, error }) {
+function App({ add_items, page, error,  get_user }) {
   const apiService = new Services();
 
   const [pageNumber, setPageNumber] = useState(1);
+  const [userState, setUserState] = useState({})
+
+  
+  useEffect(() => {
+  
+  apiService.getUser().then((result) => {
+    get_user(result.user);
+    setUserState(result.user);
+  });
+}, [])
 
   useEffect(() => {
     const offset = page * 10 - 10;
@@ -29,6 +41,8 @@ function App({ add_items, page, error }) {
       .catch(() => error());
   }, [page]);
 
+if (Object.keys(userState).length < 1) return SpinErr();
+
   return (
     <div className="App">
       <Router>
@@ -38,9 +52,10 @@ function App({ add_items, page, error }) {
           path="/articles/:slug"
           render={({ match }) => {
             const { slug } = match.params;
-            return <ActiveItem itemId={slug} />;
+            return <Article itemId={slug} />;
           }}
         />
+        <Route path="/my_article" component={MyArticles}/>
         <Route path="/new-article" component={CreateArticle} />
         <Route path="/profile" component={EditProfile} />
         <Route path="/login-up" component={SignUp} />
@@ -60,10 +75,12 @@ App.defaultProps = {
   add_items: () => {},
   error: () => {},
   page: 1,
+  get_user: () => {},
 };
 
 App.propTypes = {
   add_items: PropTypes.func,
   error: PropTypes.func,
   page: PropTypes.number,
+  get_user: PropTypes.func,
 };

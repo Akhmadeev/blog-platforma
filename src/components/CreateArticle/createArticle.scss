@@ -1,6 +1,6 @@
 .createArticle {
   width: 938px;
-  height: 701px;
+  min-height: 701px;
   margin: 114px auto 0;
   display: flex;
   justify-content: center;
@@ -55,4 +55,57 @@
 .size_xl {
   height: 168px;
   text-align: start;
+}
+.size_s {
+  width: 250px;
+  height: 40px;
+  margin-bottom: 8px;
+  margin-right: 18px;
+}
+.tabs_form {
+  display: flex;
+  height: auto;
+}
+.tabs_form_left {
+  width: 42%;
+}
+.tabs_form_right {
+  width: 45%;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+.block {
+  display: inline;
+  width: 100%;
+}
+.btn_tags_add {
+  width: 120px;
+  height: 40px;
+  background-color: #ffffff;
+  color: #1890ff;
+  border: 1px solid #1890ff;
+  box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn_tags_add:hover {
+  background-color: #128afa;
+  color: #e2f1ff;
+  border: 1px solid #0084ff;
+}
+.btn_tags_delete {
+  width: 90px;
+  height: 40px;
+  background-color: #ffffff;
+  color: #f5222d;
+  border: 1px solid #f5222d;
+  box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn_tags_delete:hover {
+  background-color: #f85e5e;
+  color: #ffffff;
+  border: 1px solid #ff000d;
 }

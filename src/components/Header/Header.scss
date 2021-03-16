@@ -48,6 +48,7 @@
   width: 109px;
   height: 51px;
   cursor: pointer;
+  color: #262626;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,15 +71,19 @@
   border-radius: 5px;
 }
 .btn_create_article:hover {
-  color: #52c41a;
+  background: #52c41a;
+  color: #fff;
   border: 1px solid #52c41a;
   box-sizing: border-box;
   border-radius: 5px;
 }
 .header_user_info {
-  width: 150px;
+  width: 200px;
   display: flex;
 
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
+}
+.black:hover {
+  color: #262626;
 }

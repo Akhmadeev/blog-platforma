@@ -1,24 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import * as action from '../../store/action';
 import './Header.scss';
-import logo from '../List/icon/Rectangle 1.svg'
+import logo from '../List/icon/Rectangle 1.svg';
 import Services from '../../ApiService';
 
-function Header({ delete_user, name }) {
+function Header({ delete_user, user_state, get_user }) {
   const [user, setUser] = useState({});
 
   const apiService = new Services();
+
+  const {SubMenu} = Menu;
 
   const deleteInfo = () => {
     localStorage.removeItem('token');
     setUser({});
     delete_user();
   };
-
-
 
   const token = localStorage.getItem('token');
 
@@ -36,32 +37,55 @@ function Header({ delete_user, name }) {
       );
     }
 
-    if (Object.keys(user).length === 0) apiService.getUser().then((result) => setUser(result.user));
-    
+    if (Object.keys(user).length === 0) {
+      apiService.getUser().then((result) => {
+        get_user(result.user);  
+
+        setUser(result.user);
+      });
+    }
+
     const { username, image } = user;
 
-    if(username !== name.username) apiService.getUser().then((result) => setUser(result.user));
+    if (username !== user_state.username) {
+      apiService.getUser().then((result) => {
+        get_user(result.user);
+        setUser(result.user);
+      });
+    }
     
     return (
       <nav className="navigation_btn">
         <Link to="/new-article" className="btn_create_article">
           Create article
         </Link>
-        <Link to="/profile" className="header_user_info">
-          <div className="item_info">
+        <div className="header_user_info">
+          {/* <div className="item_info">
             <span className="item_user_name">{username}</span>
-          </div>
+          </div> */}
+
+          <Menu>
+            <SubMenu key="SubMenu" title={username}>
+              <Menu.ItemGroup title={username}>
+                <Menu.Item key="setting:1">
+                  <Link to="/profile"> edit profile</Link>
+                </Menu.Item>
+                <Menu.Item key="setting:2">
+                  <Link to="/my_article"> my article</Link>
+                </Menu.Item>
+              </Menu.ItemGroup>
+            </SubMenu>
+          </Menu>
           <div>
-            <img src={image && logo} alt="logo" className="item_user_logo" />
+            <img src={image || logo} alt="logo" className="item_user_logo" />
           </div>
-        </Link>
-        <Link to="/login-in" onClick={() => deleteInfo()} className="btn_log_out styleoff">
+        </div>
+        <Link to="/login-in" onClick={() => deleteInfo()} className="btn_log_out black">
           log Out
         </Link>
       </nav>
     );
   };
-
 
   useEffect(() => {
     content();
@@ -71,7 +95,7 @@ function Header({ delete_user, name }) {
     <div className="header">
       <div className="header_menu">
         <span className="name_platform">
-          <Link to="/articles" className="styleoff">
+          <Link to="/articles" className="styleoff black">
             Realworld Blog
           </Link>
         </span>
@@ -81,18 +105,21 @@ function Header({ delete_user, name }) {
   );
 }
 
+
 const mapStateToProps = (state) => ({
   error_reducer: state.error_reducer,
-  name: state.user[0]
+  user_state: state.user,
 });
 
 export default connect(mapStateToProps, action)(Header);
 
 Header.defaultProps = {
   delete_user: () => {},
-  name: {},
+  get_user: () => {},
+  user_state: {},
 };
 Header.propTypes = {
   delete_user: PropTypes.func,
-  name: PropTypes.object,
+  get_user: PropTypes.func,
+  user_state: PropTypes.object,
 };

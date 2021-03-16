@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as action from '../../store/action';
 import './SignIn.scss';
 import Services from '../../ApiService';
+import SpinErr from '../SpinErr/SpinErr';
 
 function SignIn({ get_user }) {
   
@@ -24,9 +25,9 @@ function SignIn({ get_user }) {
       .then((result) => {
         localStorage.setItem('token', JSON.stringify(result.user.token));
         get_user(result.user);
-        setStatus(true)
+        setStatus(true);
       })
-      .catch((err) => console.log(err));;
+      .catch(() => SpinErr());;
   };
 
   

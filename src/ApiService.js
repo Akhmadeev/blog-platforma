@@ -10,27 +10,31 @@ export default class Services {
 
   getArticles = (page) => this.requestApi(`${this.baseUrl}/articles?offset=${page}&limit=10`);
 
-  sendEditProfile (email, token, username, image) {
-     return this.requestApi(`${this.baseUrl}/user`, {
-       method: 'PUT',
-       body: JSON.stringify({
-         user: {
-           email,
-           token,
-           username,
-           bio: 'I work at statefarm',
-           image,
-         },
-       }),
-       headers: {
-         'Content-type': 'application/json; charset=UTF-8',
-         Authorization: `Token ${localStorage.getItem('token')}`,
-       },
-     });
+  sendEditProfile(email, token, username, image) {
+    return this.requestApi(`${this.baseUrl}/user`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        user: {
+          email,
+          token,
+          username,
+          bio: 'I work at statefarm',
+          image,
+        },
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
   }
-   
 
-  getItem = (id) => this.requestApi(`${this.baseUrl}/articles/${id}`);
+  getItem = (id) =>
+    this.requestApi(`${this.baseUrl}/articles/${id}`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
 
   sendUserInfo(email, password) {
     return this.requestApi(`${this.baseUrl}/users/login`, {
@@ -71,6 +75,42 @@ export default class Services {
     });
   }
 
-  getTags = () => this.requestApi(`${this.baseUrl}/tags`)
+  getTags = () => this.requestApi(`${this.baseUrl}/tags`);
+
+  createArticle(title, description, body) {
+    return this.requestApi(`${this.baseUrl}/articles`, {
+      method: 'POST',
+      body: JSON.stringify({
+        article: {
+          title,
+          description,
+          body,
+        },
+      }),
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+  }
+
+  deleteArticle(slug) {
+    return this.requestApi(`${this.baseUrl}/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
+  }
+
+  articlesList = (name) => this.requestApi(`${this.baseUrl}/articles?author=${name}`);
+
+  favoriteArticle = (slug, event) =>
+    this.requestApi(`${this.baseUrl}/articles/${slug}/favorite`, {
+      method: event,
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
 }
 
