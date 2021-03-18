@@ -60,7 +60,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody 
         </label>
         <label className="createArticle_label">
           <span className="createArticle_input_heading">Text</span>
-          <input
+          <textarea
             className="createArticle_input size_xl"
             name="body"
             ref={register}
@@ -75,10 +75,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody 
             <div className="tabs_form_left">
               <div className="createArticle_label">
                 <span className="createArticle_input_heading block">Tags</span>
-                <div>
-                   {array.map((value) => tagForm(value))}
-                </div>
-               
+                <div>{array.map((value) => tagForm(value))}</div>
               </div>
             </div>
             <div className="tabs_form_right">

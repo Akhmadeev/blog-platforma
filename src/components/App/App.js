@@ -13,7 +13,7 @@ import Services from '../../ApiService';
 import CreateArticle from '../CreateArticle/CreateArticle';
 import EditProfile from '../EditProfile/EditProfile';
 import MyArticles from '../myArticles/MyArticles';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 import EditArticle from '../EditArticle/EditeArticle';
 
 function App({ add_items, page, error, get_user }) {
