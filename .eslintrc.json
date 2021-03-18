@@ -1,6 +1,6 @@
 {
   "extends": ["airbnb", "airbnb/hooks", "eslint-config-prettier", "some-other-config-you-use", "prettier"],
-  "plugins": ["react"],
+  "plugins": ["react", "prettier"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -8,6 +8,9 @@
   },
   "rules": {
     "curly": ["error"],
+    "prettier/prettier": "error",
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off",
     "max-depth": ["warn", 4],
     "id-length": ["warn", { "exceptions": ["i", "j"], "min": 2 }],
     "no-lonely-if": ["error"],
