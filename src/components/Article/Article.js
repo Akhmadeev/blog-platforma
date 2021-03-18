@@ -9,7 +9,7 @@ import * as action from '../../store/action';
 import './Article.scss';
 import Services from '../../ApiService';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 import { tagform } from '../../utils';
 
 

@@ -5,7 +5,7 @@ import { Pagination} from 'antd';
 import * as action from '../../store/action';
 import Item from '../Item/Item';
 import './List.scss';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 
 const List = ({ arrayItem, edit_page }) => {
 

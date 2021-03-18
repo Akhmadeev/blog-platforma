@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as action from '../../store/action';
 import Item from '../Item/Item';
 import Services from '../../ApiService';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 
 const MyArticles = ({ user }) => {
   const [array, setArray] = useState([]);
@@ -19,7 +19,7 @@ const MyArticles = ({ user }) => {
     
   }, []);
 
-  if (array.length < 1) return <div>{SpinErr()}</div>;
+  if (array.length < 1) return (<div>{SpinErr()}</div>);
 
   return (
     <div className="list">

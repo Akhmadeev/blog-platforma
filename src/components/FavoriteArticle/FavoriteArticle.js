@@ -4,7 +4,7 @@ import './FavoriteArticle.scss';
 import likeActive from './icon/likeActive.svg';
 import likeOff from './icon/likeOff.svg';
 import Services from '../../ApiService';
-import ErrorInternet from '../SpinErr/ErrorInternet';
+import ErrorInternet from '../Error/ErrorInternet';
 
 const FavoriteArticle = ({ slug }) => {
 
