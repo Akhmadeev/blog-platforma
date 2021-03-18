@@ -2,12 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Typography } from 'antd';
 import './Item.scss';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
 
 const Item = ({ element }) => {
   
-  const { title, body, slug, updatedAt } = element;
+  const { Text } = Typography;
+  
+  const tagform = (tag) => {
+    if (tag.length < 1) return 'no tags';
+    return (tag.map((elem) => <Text key={elem} code>{elem}</Text>))
+  }
+  
+  const { title, body, slug, updatedAt, tagList } = element;
   const { username, image } = element.author;
 
   const shortText = (text) => text.split(' ').slice(0, 14).join(' ');
@@ -21,9 +29,9 @@ const Item = ({ element }) => {
               {title}
             </Link>
           </span>
-          <FavoriteArticle  slug={slug}/>
+          <FavoriteArticle slug={slug} />
         </span>
-        <span className="item_tag"> Tag</span>
+        <span className="item_tag_text"> {tagform(tagList)}</span>
         <span className="article_text">{shortText(body)}</span>
       </div>
       <div className="item_right">

@@ -13,10 +13,12 @@
 .activeItem_header {
   display: flex;
 }
-.activeItem_title {
+.article_title_link {
+  max-width: 300px;
   font-size: 20px;
   line-height: 28px;
-  margin-right: 13px;
+  word-break: break-all;
+  overflow: hidden;
   color: #1890ff;
 }
 .activeItem_left {

@@ -29,12 +29,14 @@ export default class Services {
     });
   }
 
-  getItem = (id) =>
+  getItemAuthorization = (id) =>
     this.requestApi(`${this.baseUrl}/articles/${id}`, {
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`,
       },
     });
+
+  getItem = (id) => this.requestApi(`${this.baseUrl}/articles/${id}`);
 
   sendUserInfo(email, password) {
     return this.requestApi(`${this.baseUrl}/users/login`, {
@@ -77,7 +79,7 @@ export default class Services {
 
   getTags = () => this.requestApi(`${this.baseUrl}/tags`);
 
-  createArticle(title, description, body) {
+  createArticle(title, description, body, tagList) {
     return this.requestApi(`${this.baseUrl}/articles`, {
       method: 'POST',
       body: JSON.stringify({
@@ -85,6 +87,25 @@ export default class Services {
           title,
           description,
           body,
+          tagList,
+        },
+      }),
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+  }
+
+  editArticle(title, description, body, slug, tagList) {
+    return this.requestApi(`${this.baseUrl}/articles/${slug}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        article: {
+          title,
+          description,
+          body,
+          tagList,
         },
       }),
       headers: {

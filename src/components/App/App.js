@@ -14,21 +14,22 @@ import CreateArticle from '../CreateArticle/CreateArticle';
 import EditProfile from '../EditProfile/EditProfile';
 import MyArticles from '../myArticles/MyArticles';
 import SpinErr from '../SpinErr/SpinErr';
+import EditArticle from '../EditArticle/EditeArticle';
 
-function App({ add_items, page, error,  get_user }) {
+function App({ add_items, page, error, get_user }) {
   const apiService = new Services();
 
   const [pageNumber, setPageNumber] = useState(1);
-  const [userState, setUserState] = useState({})
+  const [userState, setUserState] = useState({});
 
-  
   useEffect(() => {
-  
-  apiService.getUser().then((result) => {
-    get_user(result.user);
-    setUserState(result.user);
-  });
-}, [])
+    if (localStorage.getItem('token')) {
+      apiService.getUser().then((result) => {
+        get_user(result.user);
+        setUserState(result.user);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const offset = page * 10 - 10;
@@ -41,7 +42,9 @@ function App({ add_items, page, error,  get_user }) {
       .catch(() => error());
   }, [page]);
 
-if (Object.keys(userState).length < 1) return SpinErr();
+  if (localStorage.getItem('token')) {
+  if (Object.keys(userState).length < 1) return SpinErr();
+} 
 
   return (
     <div className="App">
@@ -50,12 +53,20 @@ if (Object.keys(userState).length < 1) return SpinErr();
         <Route path="/articles" exact component={List} />
         <Route
           path="/articles/:slug"
+          exact
           render={({ match }) => {
             const { slug } = match.params;
             return <Article itemId={slug} />;
           }}
         />
-        <Route path="/my_article" component={MyArticles}/>
+        <Route
+          path="/articles/:slug/edit"
+          render={({ match }) => {
+            const { slug } = match.params;
+            return <EditArticle slugId={slug} />;
+          }}
+        />
+        <Route path="/my_article" component={MyArticles} />
         <Route path="/new-article" component={CreateArticle} />
         <Route path="/profile" component={EditProfile} />
         <Route path="/login-up" component={SignUp} />

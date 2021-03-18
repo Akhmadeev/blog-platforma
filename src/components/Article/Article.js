@@ -15,6 +15,7 @@ import SpinErr from '../SpinErr/SpinErr';
 const Article = ({ itemId, add_item, user }) => {
   const [guest, setGuest] = useState(true);
   const [article, setArticle] = useState([]);
+  const [nameArticle, setNameArticle] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
 
@@ -26,6 +27,7 @@ const Article = ({ itemId, add_item, user }) => {
         .then((result) => {
           add_item(result.article);
           if (result.article.author.username === user.username) setGuest(false);
+          setNameArticle(result.article.slug);
           return setArticle(result.article);
         })
         .catch(() => <SpinErr />);
@@ -59,21 +61,20 @@ const Article = ({ itemId, add_item, user }) => {
     setIsModalVisible(false);
   };
 
+  const btnService = () => (
+    <div className="article_btn">
+      <Button className="article_btn_delete" onClick={showModal}>
+        Delete
+      </Button>
+      <Modal title="Warning" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Вы точно хотите удалить статью???</p>
+      </Modal>
 
-        const btnService = () => (
-          <div className="article_btn">
-            <Button className="article_btn_delete" onClick={showModal}>
-              Delete
-            </Button>
-            <Modal title="Warning" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-              <p>Вы точно хотите удалить статью???</p>
-            </Modal>
-
-            <button className="article_btn_editing" type="button">
-              Edit
-            </button>
-          </div>
-        );
+      <button className="article_btn_editing" onClick={() => setArticle('Redirect_editeArticle')} type="button">
+        Edit
+      </button>
+    </div>
+  );
 
 
     return (
@@ -81,7 +82,7 @@ const Article = ({ itemId, add_item, user }) => {
         <div className="activeItem_header">
           <div className="activeItem_left">
             <span className="activeItem_header_left_block">
-              <span className="activeItem_title">{title} </span>
+              <span className="article_title_link">{title} </span>
               <FavoriteArticle  slug={slug} />
             </span>
             <span className="activeItem_tag"> Tag</span>
@@ -108,6 +109,9 @@ const Article = ({ itemId, add_item, user }) => {
   };
 
   if (article === 'Redirect') return <Redirect to="/my_article" />;
+  
+  if (article === 'Redirect_editeArticle') return <Redirect to={`/articles/${nameArticle}/edit`} />;
+
   if (article.length < 1 ) return <div>{SpinErr()}</div>;
 
   return <div className="activeItem_block">{article && item(article, guest)}</div>;
