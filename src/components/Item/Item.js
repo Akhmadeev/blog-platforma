@@ -2,23 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
-import { Typography } from 'antd';
 import './Item.scss';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
+import { shortText, tagform } from '../../utils';
 
 const Item = ({ element }) => {
   
-  const { Text } = Typography;
-  
-  const tagform = (tag) => {
-    if (tag.length < 1) return 'no tags';
-    return (tag.map((elem) => <Text key={elem} code>{elem}</Text>))
-  }
-  
   const { title, body, slug, updatedAt, tagList } = element;
   const { username, image } = element.author;
-
-  const shortText = (text) => text.split(' ').slice(0, 14).join(' ');
 
   return (
     <div className="item" key={slug}>

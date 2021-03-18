@@ -7,7 +7,7 @@ import SpinErr from '../SpinErr/SpinErr';
 
 const EditArticle = ({ slugId }) => {
   const [data, setData] = useState(false);
-  const [article, setArticle] = useState(false)
+  const [article, setArticle] = useState(false);
 
   const apiService = new Services();
 
@@ -24,12 +24,12 @@ const EditArticle = ({ slugId }) => {
     apiService.getItem(slugId).then((result) => {
       setArticle(result.article);
     });
-},[])
+  }, []);
 
-    const { title, body, description } = article;
+  const { title, body, description } = article;
 
   if (data) return <Redirect to={`/articles/${data}`} />;
-  
+
   if (!article) return SpinErr();
 
   return (

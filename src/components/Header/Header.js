@@ -40,7 +40,6 @@ function Header({ delete_user, user_state, get_user }) {
     if (Object.keys(user).length === 0) {
       apiService.getUser().then((result) => {
         get_user(result.user);  
-
         setUser(result.user);
       });
     }
@@ -60,10 +59,6 @@ function Header({ delete_user, user_state, get_user }) {
           Create article
         </Link>
         <div className="header_user_info">
-          {/* <div className="item_info">
-            <span className="item_user_name">{username}</span>
-          </div> */}
-
           <Menu>
             <SubMenu key="SubMenu" title={username}>
               <Menu.ItemGroup title={username}>

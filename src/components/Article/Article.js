@@ -10,6 +10,7 @@ import './Article.scss';
 import Services from '../../ApiService';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
 import SpinErr from '../SpinErr/SpinErr';
+import { tagform } from '../../utils';
 
 
 const Article = ({ itemId, add_item, user }) => {
@@ -37,7 +38,7 @@ const Article = ({ itemId, add_item, user }) => {
 
   const item = (element, bool) => {
 
-    const { title, body, slug, updatedAt } = element;
+    const { title, body, slug, updatedAt, tagList } = element;
     const { username, image } = element.author;
 
     
@@ -83,9 +84,9 @@ const Article = ({ itemId, add_item, user }) => {
           <div className="activeItem_left">
             <span className="activeItem_header_left_block">
               <span className="article_title_link">{title} </span>
-              <FavoriteArticle  slug={slug} />
+              <FavoriteArticle slug={slug} />
             </span>
-            <span className="activeItem_tag"> Tag</span>
+            <span className="item_tag_text">{tagform(tagList)}</span>
             <span className="activeItem_text">{title}</span>
           </div>
           <div className="activeItem_right">
