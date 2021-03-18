@@ -1,18 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "airbnb/hooks",
-    "eslint-config-prettier",
-    "some-other-config-you-use",
-    "prettier",
-    "prettier/@typescript-eslint",
-    "prettier/babel",
-    "prettier/flowtype",
-    "prettier/react",
-    "prettier/standard",
-    "prettier/unicorn",
-    "prettier/vue"
-  ],
+  "extends": ["airbnb", "airbnb/hooks", "eslint-config-prettier", "some-other-config-you-use", "prettier"],
   "plugins": ["react"],
   "parser": "babel-eslint",
   "env": {
