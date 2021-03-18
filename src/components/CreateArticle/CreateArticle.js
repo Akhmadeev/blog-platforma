@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import './createArticle.scss';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
-import ErrorInternet from '../SpinErr/ErrorInternet';
+import ErrorInternet from '../Error/ErrorInternet';
 
 function CreateArticle() {
 

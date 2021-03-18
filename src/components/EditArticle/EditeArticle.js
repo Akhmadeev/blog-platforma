@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 
 const EditArticle = ({ slugId }) => {
   const [data, setData] = useState(false);

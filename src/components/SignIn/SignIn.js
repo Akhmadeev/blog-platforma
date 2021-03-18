@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as action from '../../store/action';
 import './SignIn.scss';
 import Services from '../../ApiService';
-import SpinErr from '../SpinErr/SpinErr';
+import SpinErr from '../Error/SpinErr';
 
 function SignIn({ get_user }) {
   
