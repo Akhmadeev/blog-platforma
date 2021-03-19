@@ -21,11 +21,10 @@ function SignUp({ get_user }) {
     apiService
       .sendRequestAuthorization(username, email, password)
       .then((result) => {
-        console.log(result);
         localStorage.setItem('token', JSON.stringify(result.user.token));
 
         get_user(result.user);
-        setlogUp(true);
+        setlogUp(true); 
       })
       .catch(() => SpinErr());
   };
