@@ -43,8 +43,8 @@ function App({ add_items, page, error, get_user }) {
   }, [page]);
 
   if (localStorage.getItem('token')) {
-  if (Object.keys(userState).length < 1) return SpinErr();
-} 
+    if (Object.keys(userState).length < 1) return SpinErr();
+  }
 
   return (
     <div className="App">
