@@ -27,7 +27,7 @@ function SignIn({ get_user }) {
         get_user(result.user);
         setStatus(true);
       })
-      .catch(() => SpinErr());;
+      .catch(() => SpinErr());
   };
 
   

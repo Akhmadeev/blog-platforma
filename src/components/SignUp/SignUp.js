@@ -1,21 +1,38 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { connect } from 'react-redux';
+import * as action from '../../store/action';
 import './SignUp.scss';
-import Services from '../../ApiService'
+import Services from '../../ApiService';
+import SpinErr from '../Error/SpinErr';
 
-function SignUp() {
-
-  
+function SignUp({ get_user }) {
+  const [logUp, setlogUp] = useState(false);
   const apiService = new Services();
+
+  const token = localStorage.getItem('token');
 
   const { register, handleSubmit, watch, errors } = useForm();
   const onSubmit = (data) => {
     const { username, email, password } = data;
-   
-    apiService.sendRequestAuthorization(username, email, password);
+
+    apiService
+      .sendRequestAuthorization(username, email, password)
+      .then((result) => {
+        console.log(result);
+        localStorage.setItem('token', JSON.stringify(result.user.token));
+
+        get_user(result.user);
+        setlogUp(true);
+      })
+      .catch(() => SpinErr());
   };
   const password = useRef({});
   password.current = watch('password', '');
+
+  if (token || logUp) return <Redirect to="/articles" />;
 
   return (
     <div className="form_sign">
@@ -95,4 +112,12 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default connect(null, action)(SignUp);
+
+SignUp.defaultProps = {
+  get_user: () => {},
+};
+
+SignUp.propTypes = {
+  get_user: PropTypes.func,
+};
