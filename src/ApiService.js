@@ -2,16 +2,16 @@ export default class Services {
   baseUrl = 'https://conduit.productionready.io/api';
 
   requestApi = async (url, options) => {
-    const body = await fetch(url, options);
+    const body = await fetch(`${this.baseUrl}${url}`, options);
     if (!body.ok) return body.status;
     const result = await body.json();
     return result;
   };
 
-  getArticles = (page) => this.requestApi(`${this.baseUrl}/articles?offset=${page}&limit=10`);
+  getArticles = (page) => this.requestApi(`/articles?offset=${page}&limit=10`);
 
   sendEditProfile(email, token, username, image) {
-    return this.requestApi(`${this.baseUrl}/user`, {
+    return this.requestApi(`/user`, {
       method: 'PUT',
       body: JSON.stringify({
         user: {
@@ -30,16 +30,16 @@ export default class Services {
   }
 
   getItemAuthorization = (id) =>
-    this.requestApi(`${this.baseUrl}/articles/${id}`, {
+    this.requestApi(`/articles/${id}`, {
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`,
       },
     });
 
-  getItem = (id) => this.requestApi(`${this.baseUrl}/articles/${id}`);
+  getItem = (id) => this.requestApi(`/articles/${id}`);
 
   sendUserInfo(email, password) {
-    return this.requestApi(`${this.baseUrl}/users/login`, {
+    return this.requestApi(`/users/login`, {
       method: 'POST',
       body: JSON.stringify({
         user: {
@@ -70,17 +70,17 @@ export default class Services {
   }
 
   getUser() {
-    return this.requestApi(`${this.baseUrl}/user`, {
+    return this.requestApi(`/user`, {
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`,
       },
     });
   }
 
-  getTags = () => this.requestApi(`${this.baseUrl}/tags`);
+  getTags = () => this.requestApi(`/tags`);
 
   createArticle(title, description, body, tagList) {
-    return this.requestApi(`${this.baseUrl}/articles`, {
+    return this.requestApi(`/articles`, {
       method: 'POST',
       body: JSON.stringify({
         article: {
@@ -98,7 +98,7 @@ export default class Services {
   }
 
   editArticle(title, description, body, slug, tagList) {
-    return this.requestApi(`${this.baseUrl}/articles/${slug}`, {
+    return this.requestApi(`/articles/${slug}`, {
       method: 'PUT',
       body: JSON.stringify({
         article: {
@@ -116,7 +116,7 @@ export default class Services {
   }
 
   deleteArticle(slug) {
-    return this.requestApi(`${this.baseUrl}/articles/${slug}`, {
+    return this.requestApi(`/articles/${slug}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`,
@@ -124,10 +124,10 @@ export default class Services {
     });
   }
 
-  articlesList = (name) => this.requestApi(`${this.baseUrl}/articles?author=${name}`);
+  articlesList = (name) => this.requestApi(`/articles?author=${name}`);
 
   favoriteArticle = (slug, event) =>
-    this.requestApi(`${this.baseUrl}/articles/${slug}/favorite`, {
+    this.requestApi(`/articles/${slug}/favorite`, {
       method: event,
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`,
