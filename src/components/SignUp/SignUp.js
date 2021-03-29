@@ -1,37 +1,45 @@
 import React, { useRef, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { connect } from 'react-redux';
+import { message } from 'antd';
 import * as action from '../../store/action';
 import './SignUp.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
+import { articles, loginIn } from '../../routeType';
 
 function SignUp({ get_user }) {
   const [logUp, setlogUp] = useState(false);
-  const apiService = new Services();
+  const [isloading, setIsLoading] = useState(false)
 
   const token = localStorage.getItem('token');
 
   const { register, handleSubmit, watch, errors } = useForm();
+
   const onSubmit = (data) => {
+    setIsLoading(true)
     const { username, email, password } = data;
 
-    apiService
-      .sendRequestAuthorization(username, email, password)
+    Services.sendRequestAuthorization(username, email, password)
       .then((result) => {
         localStorage.setItem('token', JSON.stringify(result.user.token));
-
+        
         get_user(result.user);
-        setlogUp(true); 
+        setlogUp(true);
       })
       .catch(() => SpinErr());
+    setIsLoading(false);
   };
+
+
   const password = useRef({});
   password.current = watch('password', '');
 
-  if (token || logUp) return <Redirect to="/articles" />;
+  if (token || logUp && !isloading) return <Redirect to={articles} />;
+
+  if (isloading) message.loading('Подождите, пожалуйста..');
 
   return (
     <div className="form_sign">
@@ -64,6 +72,7 @@ function SignUp({ get_user }) {
               className="form_input"
             />
           </label>
+          
           <label htmlFor="pass1" className="form_label">
             <span className="label_input_name">Password</span>
             <input
@@ -81,7 +90,7 @@ function SignUp({ get_user }) {
               placeholder="Password"
               className="form_input"
             />
-            {errors.password && <p className="error">{errors.password.message}</p>}
+            {errors.password && <p className="error">password error</p>}
           </label>
           <label htmlFor="pass2" className="form_label">
             <span className="label_input_name">Repeat password</span>
@@ -95,7 +104,7 @@ function SignUp({ get_user }) {
               placeholder="Repeat password"
               className="form_input"
             />
-            {errors.password_repeat && <p className="error">{errors.password_repeat.message}</p>}
+            {errors.password_repeat && <p className="error">password error</p>}
           </label>
         </div>
         <label htmlFor="pass2" className="form_label_bottom ">
@@ -104,7 +113,10 @@ function SignUp({ get_user }) {
         </label>
         <input htmlFor="creat_form" value="Create" type="submit" className="btn_form" />
         <span className="text_bottom_form">
-          Already have an account? <span className="link_text_bottom_form">Sign In.</span>
+          Already have an account?{' '}
+          <Link to={loginIn} className="link_text_bottom_form">
+            Sign In.
+          </Link>
         </span>
       </form>
     </div>

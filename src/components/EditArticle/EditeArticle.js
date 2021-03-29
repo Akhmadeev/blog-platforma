@@ -1,34 +1,38 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as action from '../../store/action';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
+import { loginIn } from '../../routeType';
+import { userState } from '../../storeSelectors';
 
-const EditArticle = ({ slugId }) => {
+const EditArticle = ({ slugId, user_state }) => {
   const [data, setData] = useState(false);
   const [article, setArticle] = useState(false);
-
-  const apiService = new Services();
 
   const onSubmit = (obj) => {
     const { title, description, body, ...tagArray } = obj;
 
     const tagList = Object.values(tagArray);
-    apiService.editArticle(title, description, body, slugId, tagList).then((result) => {
+    Services.editArticle(title, description, body, slugId, tagList).then((result) => {
       const { slug } = result.article;
       setData(slug);
     });
   };
   useEffect(() => {
-    apiService.getItem(slugId).then((result) => {
+    Services.getArticle(slugId).then((result) => {
       setArticle(result.article);
     });
   }, []);
 
-  const { title, body, description } = article;
+  const { title, body, description, tagList } = article;
 
   if (data) return <Redirect to={`/articles/${data}`} />;
+
+  if (!user_state.id) return <Redirect to={loginIn} />;
 
   if (!article) return SpinErr();
 
@@ -39,17 +43,23 @@ const EditArticle = ({ slugId }) => {
       inputTitle={title}
       inputDescription={description}
       inputBody={body}
+      tagList={tagList}
     />
   );
 };
+const mapStateToProps = (state) => ({
+  user_state: userState(state)
+});
 
-export default EditArticle;
+export default connect(mapStateToProps, action)(EditArticle);
 
 
 EditArticle.defaultProps = {
   slugId: '',
+  user_state: {}
 };
 
 EditArticle.propTypes = {
   slugId: PropTypes.string,
+  user_state: PropTypes.object,
 };

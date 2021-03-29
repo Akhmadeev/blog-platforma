@@ -6,28 +6,28 @@ import { connect } from 'react-redux';
 import * as action from '../../store/action';
 import './EditProfile.scss';
 import Services from '../../ApiService';
+import { articles, loginIn } from '../../routeType';
+import { userState } from '../../storeSelectors';
 
-function EditProfile({get_user}) {
+function EditProfile({ get_user, user_state }) {
 
   const [status, setStatus] = useState(false)
-
-  const apiService = new Services();
-
   const token = localStorage.getItem('token');
 
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     const { username, email, image } = data;
-    apiService.sendEditProfile(email, token, username, image).then((res) => {
+    Services.sendEditProfile(email, token, username, image).then((res) => {
       setStatus(true);
-      get_user(res)
+      get_user(res.user);
     });
-
   };
 
-  if (status) {
-    return <Redirect to="/articles" />;
-  }
+  if (!user_state.id) return <Redirect to={loginIn} />;
+
+    if (status) {
+      return <Redirect to={articles} />;
+    }
 
   return (
     <div className="form_sign">
@@ -99,12 +99,17 @@ function EditProfile({get_user}) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  user_state: userState(state)
+});
 
-export default connect(null, action)(EditProfile);
+export default connect(mapStateToProps, action)(EditProfile);
 
 EditProfile.defaultProps = {
-  get_user: () => {},
+  get_user: () => { },
+  user_state: {},
 };
 EditProfile.propTypes = {
   get_user: PropTypes.func,
+  user_state: PropTypes.object
 };

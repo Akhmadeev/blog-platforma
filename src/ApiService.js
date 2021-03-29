@@ -1,14 +1,14 @@
-export default class Services {
+class Services {
   baseUrl = 'https://conduit.productionready.io/api';
 
   requestApi = async (url, options) => {
     const body = await fetch(`${this.baseUrl}${url}`, options);
-    if (!body.ok) return body.status;
+    if (!body.ok) throw new Error();
     const result = await body.json();
     return result;
   };
 
-  getArticles = (page) => this.requestApi(`/articles?offset=${page}&limit=10`);
+  getArticles = (page) => this.requestApi(`/articles?limit=10&offset=${page}`);
 
   sendEditProfile(email, token, username, image) {
     return this.requestApi(`/user`, {
@@ -29,14 +29,16 @@ export default class Services {
     });
   }
 
-  getItemAuthorization = (id) =>
-    this.requestApi(`/articles/${id}`, {
-      headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
-      },
-    });
-
-  getItem = (id) => this.requestApi(`/articles/${id}`);
+  getArticle = (id) => {
+    if (localStorage.getItem('token')) {
+      return this.requestApi(`/articles/${id}`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`,
+        },
+      });
+    }
+    return this.requestApi(`/articles/${id}`);
+  };
 
   sendUserInfo(email, password) {
     return this.requestApi(`/users/login`, {
@@ -54,7 +56,7 @@ export default class Services {
   }
 
   sendRequestAuthorization(username, email, password) {
-    return this.requestApi(`https://conduit.productionready.io/api/users`, {
+    return this.requestApi(`/users`, {
       method: 'POST',
       body: JSON.stringify({
         user: {
@@ -134,4 +136,6 @@ export default class Services {
       },
     });
 }
+
+export default new Services();
 

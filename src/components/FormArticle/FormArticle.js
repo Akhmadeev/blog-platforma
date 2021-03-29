@@ -1,16 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
-const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody }) => {
+const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList }) => {
 
-  const [array, setArray] = useState([1, 2])
+  const [array, setArray] = useState(['', ''])
   
   const { register, handleSubmit } = useForm();
 
+  let count = 0;
+
   const addTag = () => {
     const newArray = array.slice();
-    newArray.push(Math.floor(Math.random() * 100));
+    newArray.push('');
     setArray(newArray);
   }
 
@@ -21,14 +23,28 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody 
     setArray(newArray)
   }
 
-  const tagForm = (name) => (
-    <div key={name}>
-      <input className="createArticle_input size_s" name={name} ref={register} type="text" placeholder="Tag" />
-      <button type="button" onClick={() => deleteTag(name)} className="btn_tags_delete">
-        Delete
-      </button>
-    </div>
-  );
+  const tagForm = (name) => {
+    count += 1
+    return (
+      <div key={name + count}>
+        <input
+          className="createArticle_input size_s"
+          defaultValue={name}
+          name={count}
+          ref={register}
+          type="text"
+          placeholder="Tag"
+        />
+        <button type="button" onClick={() => deleteTag(name)} className="btn_tags_delete">
+          Delete
+        </button>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if(tagList.length > 0) setArray(tagList)
+  }, [])
 
   return (
     <div className="createArticle">
@@ -98,6 +114,7 @@ FormArticle.defaultProps = {
   inputTitle: '',
   inputDescription: '',
   inputBody: '',
+  tagList: [],
   onSubmit: () => {},
 };
 
@@ -106,5 +123,6 @@ FormArticle.propTypes = {
   inputTitle: PropTypes.string,
   inputDescription: PropTypes.string,
   inputBody: PropTypes.string,
+  tagList: PropTypes.array,
   onSubmit: PropTypes.func,
 };

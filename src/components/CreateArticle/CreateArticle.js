@@ -1,24 +1,25 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as action from '../../store/action';
 import './createArticle.scss';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
 import ErrorInternet from '../Error/ErrorInternet';
+import { loginIn } from '../../routeType';
+import { userState } from '../../storeSelectors';
 
-function CreateArticle() {
+function CreateArticle({ user_state }) {
 
   const [data, setData] = useState(false);
-  
-
-  const apiService = new Services();
 
   const onSubmit = (obj) => {
     const { title, description, body, ...tagArray } = obj;
 
     const tagList = Object.values(tagArray);
-    
-    apiService
-      .createArticle(title, description, body, tagList)
+
+    Services.createArticle(title, description, body, tagList)
       .then((result) => {
         const { slug } = result.article;
         setData(slug);
@@ -26,11 +27,23 @@ function CreateArticle() {
       .catch(() => ErrorInternet());
   };
 
- if (data) return <Redirect to={`/articles/${data}`} />;
+  if (!user_state.id) return <Redirect to={loginIn} />;
 
-  return (
-    <FormArticle onSubmit={onSubmit} title="Create new article" />
-  );
+  if (data) return <Redirect to={`/articles/${data}`} />;
+
+  return <FormArticle onSubmit={onSubmit} title="Create new article" />;
 }
 
-export default CreateArticle;
+const mapStateToProps = (state) => ({
+  user_state: userState(state)
+});
+
+export default connect(mapStateToProps, action)(CreateArticle);
+
+CreateArticle.defaultProps = {
+  user_state: {},
+};
+
+CreateArticle.propTypes = {
+  user_state: PropTypes.object,
+};

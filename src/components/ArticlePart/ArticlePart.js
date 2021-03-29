@@ -2,14 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import {  Typography } from 'antd';
 import './Item.scss';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
-import { shortText, tagform } from '../../utils';
+import { shortText  } from '../../utils';
 
-const Item = ({ element }) => {
+const ArticlePart = ({ element }) => {
   
   const { title, body, slug, updatedAt, tagList } = element;
   const { username, image } = element.author;
+  
+  const { Text } = Typography;
+  
+  const tagform = (tag) => {
+    if (tag.length < 1) return 'no tags';
+    return tag.map((elem) => (
+      <Text key={elem} code>
+        {elem}
+      </Text>
+    ));
+  };
 
   return (
     <div className="item" key={slug}>
@@ -40,12 +52,12 @@ const Item = ({ element }) => {
   );
 };
 
-export default Item;
+export default ArticlePart;
 
-Item.defaultProps = {
+ArticlePart.defaultProps = {
   element: {},
 };
 
-Item.propTypes = {
+ArticlePart.propTypes = {
   element: PropTypes.object,
 };

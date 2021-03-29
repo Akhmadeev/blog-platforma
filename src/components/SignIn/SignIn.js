@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { connect } from 'react-redux';
@@ -7,21 +7,18 @@ import * as action from '../../store/action';
 import './SignIn.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
+import {articles, loginUp} from '../../routeType'
 
 function SignIn({ get_user }) {
   
   const [status, setStatus] = useState(false);
 
-  
   const token = localStorage.getItem('token');
-
-  const apiService = new Services();
 
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
     const { email, password } = data;
-    apiService
-      .sendUserInfo(email, password)
+    Services.sendUserInfo(email, password)
       .then((result) => {
         localStorage.setItem('token', JSON.stringify(result.user.token));
         get_user(result.user);
@@ -31,7 +28,7 @@ function SignIn({ get_user }) {
   };
 
   
-  if (token || status) return <Redirect to="/articles" />;
+  if (token || status) return <Redirect to={articles} />;
 
   return (
     <div className="form_sign">
@@ -63,14 +60,12 @@ function SignIn({ get_user }) {
           </label>
         </div>
 
-        <input
-          htmlFor="creat_form"
-          value="Login"
-          type="submit"
-          className="btn_form"
-        />
+        <input htmlFor="creat_form" value="Login" type="submit" className="btn_form" />
         <span className="text_bottom_form">
-          Already have an account? <span className="link_text_bottom_form">Sign Up.</span>
+          Already have an account?{' '}
+          <Link to={loginUp} className="link_text_bottom_form">
+            Sign Up.
+          </Link>
         </span>
       </form>
     </div>

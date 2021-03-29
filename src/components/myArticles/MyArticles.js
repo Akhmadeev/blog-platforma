@@ -2,18 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../../store/action';
-import Item from '../Item/Item';
+import ArticlePart from '../ArticlePart/ArticlePart';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
+import { userState } from '../../storeSelectors';
 
 const MyArticles = ({ user }) => {
   const [array, setArray] = useState([]);
 
-  const apiService = new Services();
-
   useEffect(() => {
-    apiService
-      .articlesList(user.username)
+    Services.articlesList(user.username)
       .then((result) => setArray(result.articles))
       .catch(() => SpinErr());
     
@@ -24,13 +22,13 @@ const MyArticles = ({ user }) => {
   return (
     <div className="list">
       {array.map((element) => (
-        <Item key={element.slug} element={element} />
+        <ArticlePart key={element.slug} element={element} />
       ))}
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({ user: state.user,});
+const mapStateToProps = (state) => ({ user: userState(state)});
 
 export default connect(mapStateToProps, action)(MyArticles);
 

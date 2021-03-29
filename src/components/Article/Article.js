@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Modal, Button } from 'antd';
+import { Modal, Typography, Button } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
 import * as action from '../../store/action';
@@ -10,23 +10,22 @@ import './Article.scss';
 import Services from '../../ApiService';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
 import SpinErr from '../Error/SpinErr';
-import { tagform } from '../../utils';
+import { myArticles } from '../../routeType';
+import { userState } from '../../storeSelectors';
 
 
-const Article = ({ itemId, add_item, user }) => {
+const Article = ({ itemId,  user }) => {
   const [guest, setGuest] = useState(true);
   const [article, setArticle] = useState([]);
   const [nameArticle, setNameArticle] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-
-  const apiService = new Services();
+  
+const { Text } = Typography;
 
     useEffect(() => {
-      apiService
-        .getItem(itemId)
+      Services.getArticle(itemId)
         .then((result) => {
-          add_item(result.article);
           if (result.article.author.username === user.username) setGuest(false);
           setNameArticle(result.article.slug);
           return setArticle(result.article);
@@ -34,6 +33,14 @@ const Article = ({ itemId, add_item, user }) => {
         .catch(() => <SpinErr />);
     }, []);
 
+  const tagform = (tag) => {
+    if (tag.length < 1) return 'no tags';
+    return tag.map((elem) => (
+      <Text key={elem} code>
+        {elem}
+      </Text>
+    ));
+  };
 
 
   const item = (element, bool) => {
@@ -43,8 +50,7 @@ const Article = ({ itemId, add_item, user }) => {
 
     
   const removeArticle = () => {
-    apiService
-      .deleteArticle(slug)
+    Services.deleteArticle(slug)
       .then(() => setArticle('Redirect'))
       .catch(() => SpinErr);
   };
@@ -109,7 +115,7 @@ const Article = ({ itemId, add_item, user }) => {
     );
   };
 
-  if (article === 'Redirect') return <Redirect to="/my_article" />;
+  if (article === 'Redirect') return <Redirect to={myArticles} />;
   
   if (article === 'Redirect_editeArticle') return <Redirect to={`/articles/${nameArticle}/edit`} />;
 
@@ -119,7 +125,7 @@ const Article = ({ itemId, add_item, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  user: userState(state)
 });
 
 export default connect(mapStateToProps, action)(Article);
@@ -127,11 +133,9 @@ export default connect(mapStateToProps, action)(Article);
 Article.defaultProps = {
   user: {},
   itemId: '',
-  add_item: () => {},
 };
 
 Article.propTypes = {
   user: PropTypes.object,
-  add_item: PropTypes.func,
   itemId: PropTypes.string,
 };

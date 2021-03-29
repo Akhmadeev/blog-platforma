@@ -5,26 +5,27 @@ import { connect } from 'react-redux';
 import * as action from '../../store/action';
 import './App.scss';
 import Header from '../Header/Header';
-import List from '../List/List';
+import ArticleList from '../ArticleList/ArticleList';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 import Article from '../Article/Article';
 import Services from '../../ApiService';
 import CreateArticle from '../CreateArticle/CreateArticle';
 import EditProfile from '../EditProfile/EditProfile';
-import MyArticles from '../myArticles/MyArticles';
+import MyArticles from '../MyArticles/MyArticles';
 import EditArticle from '../EditArticle/EditeArticle';
 import SpinErr from '../Error/SpinErr';
+import { articles, articlesSlug, articlesSlugEdit, myArticles, newArticle, profile, loginIn, loginUp } from '../../routeType';
+import { pageState } from '../../storeSelectors';
 
 function App({ add_items, page, error, get_user }) {
-  const apiService = new Services();
 
   const [pageNumber, setPageNumber] = useState(1);
   const [userState, setUserState] = useState({});
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      apiService.getUser().then((result) => {
+      Services.getUser().then((result) => {
         get_user(result.user);
         setUserState(result.user);
       });
@@ -34,8 +35,7 @@ function App({ add_items, page, error, get_user }) {
   useEffect(() => {
     const offset = page * 10 - 10;
     setPageNumber(offset);
-    apiService
-      .getArticles(pageNumber, add_items, error)
+    Services.getArticles(pageNumber, add_items, error)
       .then((result) => {
         add_items(result.articles);
       })
@@ -50,9 +50,10 @@ function App({ add_items, page, error, get_user }) {
     <div className="App">
       <Router>
         <Header />
-        <Route path="/articles" exact component={List} />
+        <Route path="/" exact component={ArticleList} />
+        <Route path={articles} exact component={ArticleList} />
         <Route
-          path="/articles/:slug"
+          path={articlesSlug}
           exact
           render={({ match }) => {
             const { slug } = match.params;
@@ -60,24 +61,24 @@ function App({ add_items, page, error, get_user }) {
           }}
         />
         <Route
-          path="/articles/:slug/edit"
+          path={articlesSlugEdit}
           render={({ match }) => {
             const { slug } = match.params;
             return <EditArticle slugId={slug} />;
           }}
         />
-        <Route path="/my_article" component={MyArticles} />
-        <Route path="/new-article" component={CreateArticle} />
-        <Route path="/profile" component={EditProfile} />
-        <Route path="/login-up" component={SignUp} />
-        <Route path="/login-in" component={SignIn} />
+        <Route path={myArticles} component={MyArticles} />
+        <Route path={newArticle} component={CreateArticle} />
+        <Route path={profile} component={EditProfile} />
+        <Route path={loginUp} component={SignUp} />
+        <Route path={loginIn} component={SignIn} />
       </Router>
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
-  page: state.getPage,
+  page: pageState(state)
 });
 
 export default connect(mapStateToProps, action)(App);

@@ -3,18 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Pagination} from 'antd';
 import * as action from '../../store/action';
-import Item from '../Item/Item';
-import './List.scss';
+import ArticlePart from '../ArticlePart/ArticlePart';
+import './ArticleList.scss';
 import SpinErr from '../Error/SpinErr';
+import { pageState, arrayItemState } from '../../storeSelectors';
 
-const List = ({ arrayItem, edit_page }) => {
-
+const ArticleList = ({ arrayItem, edit_page }) => {
 
   if (arrayItem.length < 1) return <div>{SpinErr()}</div>;
 
+  const renderItems = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />)
+
   return (
     <div>
-      <div className="list">{arrayItem && arrayItem.map((element) => <Item key={element.slug} element={element} />)}</div>
+      <div className="list">{arrayItem && renderItems()}</div>
       <div className="pagination">
         <Pagination
           size="small"
@@ -29,18 +31,18 @@ const List = ({ arrayItem, edit_page }) => {
 };
 
 const mapStateToProps = (state) => ({
-  edit_page: state.getPage,
-  arrayItem: state.getItem,
+  edit_page: pageState(state),
+  arrayItem: arrayItemState(state)
 });
 
-export default connect(mapStateToProps, action)(List);
+export default connect(mapStateToProps, action)(ArticleList);
 
-List.defaultProps = {
+ArticleList.defaultProps = {
   arrayItem: [],
-  edit_page: () => {}
+  edit_page: () => {},
 };
 
-List.propTypes = {
+ArticleList.propTypes = {
   arrayItem: PropTypes.array,
-  edit_page: PropTypes.func
+  edit_page: PropTypes.func,
 };

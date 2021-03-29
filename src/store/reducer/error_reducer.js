@@ -1,7 +1,9 @@
+import {ERROR } from '../type/actionType';
+
 const error_reducer = (state = false, action) => {
   switch (action.type) {
-    case 'ERROR':
-      return true
+    case ERROR:
+      return true;
     default:
       return state;
   }
