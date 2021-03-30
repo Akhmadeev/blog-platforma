@@ -44,8 +44,6 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
     if (tagList.length > 0) setArrayTags(tagList);
   }, []);
 
-  console.log(isLoading);
-
   return (
     <div className="createArticle">
       <form className="createArticle_main">

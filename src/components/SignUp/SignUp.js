@@ -3,19 +3,19 @@ import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { connect } from 'react-redux';
-import { message } from 'antd';
 import * as action from '../../store/action';
 import './SignUp.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
 import { articles, loginIn } from '../../routeType';
+import { setToken } from '../../localStorageServices';
+import { userState } from '../../storeSelectors';
 
-function SignUp({ get_user }) {
+function SignUp({ get_user, user_state }) {
   const [logUp, setlogUp] = useState(false);
-  const [isloading, setIsLoading] = useState(false)
-  const [sendLoading, setSendLoading] = useState(false)
+  const [isloading, setIsLoading] = useState(false);
+  const [sendLoading, setSendLoading] = useState(false);
 
-  const token = localStorage.getItem('token');
 
   const { register, handleSubmit, watch, errors } = useForm();
 
@@ -24,26 +24,25 @@ function SignUp({ get_user }) {
     setSendLoading(true);
     const { username, email, password } = data;
 
-    Services.sendRequestAuthorization(username, email, password)
+   Services.sendRequestAuthorization(username, email, password)
       .then((result) => {
-        localStorage.setItem('token', JSON.stringify(result.user.token));
+        // localStorage.setItem('token', JSON.stringify(result.user.token));
+        setToken(JSON.stringify(result.user.token));
         get_user(result.user);
         setlogUp(true);
       })
       .catch(() => {
         SpinErr();
-        setSendLoading(false);
       });
-    setIsLoading(false);
+     setIsLoading(false);
   };
-
 
   const password = useRef({});
   password.current = watch('password', '');
 
-  if (token || logUp && !isloading) return <Redirect to={articles} />;
+  if (user_state.id || (logUp && !isloading)) return <Redirect to={articles} />;
 
-  if (isloading) message.loading('Подождите, пожалуйста..');
+  if (isloading) return SpinErr();
 
   return (
     <div className="form_sign">
@@ -127,12 +126,18 @@ function SignUp({ get_user }) {
   );
 }
 
-export default connect(null, action)(SignUp);
+const mapStateToProps = (state) => ({
+  user_state: userState(state),
+});
+
+export default connect(mapStateToProps, action)(SignUp);
 
 SignUp.defaultProps = {
   get_user: () => {},
+  user_state: {}
 };
 
 SignUp.propTypes = {
   get_user: PropTypes.func,
+  user_state: PropTypes.object,
 };

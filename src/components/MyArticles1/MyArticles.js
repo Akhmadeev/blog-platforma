@@ -8,6 +8,7 @@ import SpinErr from '../Error/SpinErr';
 import { userState } from '../../storeSelectors';
 
 const MyArticles = ({ user }) => {
+  
   const [array, setArray] = useState([]);
 
   useEffect(() => {

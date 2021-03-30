@@ -30,7 +30,8 @@ const EditArticle = ({ slugId, user_state }) => {
   useEffect(() => {
     Services.getArticle(slugId).then((result) => {
       setArticle(result.article);
-    });
+    })
+    .catch(() => Warning())
   }, []);
 
   const { title, body, description, tagList } = article;

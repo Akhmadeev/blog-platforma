@@ -7,11 +7,14 @@ import likeOff from '../../icon/likeOff.svg';
 import Services from '../../ApiService';
 import ErrorInternet from '../Error/ErrorInternet';
 import Warning from '../Error/Warning';
+import { getToken } from '../../localStorageServices';
 
 const FavoriteArticle = ({ slug }) => {
     
   const [like, setLike] = useState(false);
   const [countLike, setCountLike] = useState(0);
+
+  const token = getToken();
 
   const warning = () => {
     message.warning('Требуется авторизация');
@@ -27,7 +30,7 @@ const FavoriteArticle = ({ slug }) => {
     }, []);
 
   const rateArticle = () => {
-    if (localStorage.getItem('token')) {
+    if (token) {
        if (like) {
         return Services.favoriteArticle(slug, 'DELETE')
           .then((result) => {

@@ -1,3 +1,5 @@
+import { getToken } from "./localStorageServices";
+
 class Services {
   baseUrl = 'https://conduit.productionready.io/api';
 
@@ -24,7 +26,7 @@ class Services {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
       },
     });
   }
@@ -33,7 +35,7 @@ class Services {
     if (localStorage.getItem('token')) {
       return this.requestApi(`/articles/${id}`, {
         headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`,
+          Authorization: `Token ${getToken()}`,
         },
       });
     }
@@ -74,7 +76,7 @@ class Services {
   getUser() {
     return this.requestApi(`/user`, {
       headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
       },
     });
   }
@@ -93,7 +95,7 @@ class Services {
         },
       }),
       headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
@@ -111,7 +113,7 @@ class Services {
         },
       }),
       headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
@@ -121,7 +123,7 @@ class Services {
     return this.requestApi(`/articles/${slug}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
       },
     });
   }
@@ -132,7 +134,7 @@ class Services {
     this.requestApi(`/articles/${slug}/favorite`, {
       method: event,
       headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`,
+        Authorization: `Token ${getToken()}`,
       },
     });
 }

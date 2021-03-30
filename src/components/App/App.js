@@ -18,19 +18,23 @@ import SpinErr from '../Error/SpinErr';
 import { articles, articlesSlug, articlesSlugEdit, myArticles, newArticle, profile, loginIn, loginUp } from '../../routeType';
 import { pageState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
+import { getToken } from '../../localStorageServices';
 
 function App({ add_items, page, error, get_user }) {
 
   const [pageNumber, setPageNumber] = useState(1);
   const [userState, setUserState] = useState({});
 
+  const token = getToken();
+
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      Services.getUser().then((result) => {
-        get_user(result.user);
-        setUserState(result.user);
-      })
-      .catch(() => <Warning/>)
+    if (token) {
+      Services.getUser()
+        .then((result) => {
+          get_user(result.user);
+          setUserState(result.user);
+        })
+        .catch(() => <Warning />);
     }
   }, []);
 
@@ -44,7 +48,7 @@ function App({ add_items, page, error, get_user }) {
       .catch(() => error());
   }, [page]);
 
-  if (localStorage.getItem('token')) {
+  if (token) {
     if (Object.keys(userState).length < 1) return SpinErr();
   }
 

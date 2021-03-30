@@ -9,20 +9,22 @@ import Services from '../../ApiService';
 import { articles, loginIn } from '../../routeType';
 import { userState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
+import { getToken } from '../../localStorageServices';
 
 function EditProfile({ get_user, user_state }) {
 
   const [status, setStatus] = useState(false)
-  const token = localStorage.getItem('token');
+  const token = getToken();
 
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     const { username, email, image } = data;
-    Services.sendEditProfile(email, token, username, image).then((res) => {
-      setStatus(true);
-      get_user(res.user)
-      .catch(() => <Warning/>)
-    });
+    Services.sendEditProfile(email, token, username, image)
+      .then((res) => {
+        setStatus(true);
+        get_user(res.user);
+      })
+      .catch(() => <Warning />);
   };
 
   if (!user_state.id) return <Redirect to={loginIn} />;

@@ -8,13 +8,14 @@ import './SignIn.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
 import {articles, loginUp} from '../../routeType'
+import { getToken } from '../../localStorageServices';
 
 function SignIn({ get_user }) {
   
   const [status, setStatus] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
 
-  const token = localStorage.getItem('token');
+  const token = getToken();
 
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {

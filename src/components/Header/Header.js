@@ -8,20 +8,19 @@ import './Header.scss';
 import logo from '../../icon/Rectangle 1.svg';
 import { articles, loginIn, loginUp, myArticles, newArticle, profile } from '../../routeType';
 import { userState, errorState } from '../../storeSelectors';
+import {  removeToken } from '../../localStorageServices';
 
 
 function Header({ delete_user, user_state }) {
   const { SubMenu } = Menu;
 
   const deleteInfo = () => {
-    localStorage.removeItem('token');
+    removeToken()
     delete_user();
   };
 
-  const token = localStorage.getItem('token');
-
   const content = () => {
-    if (!token) {
+    if (!user_state.id) {
       return (
         <nav className="navigation_btn">
           <Link to={loginIn} className="btn styleoff">
@@ -67,7 +66,7 @@ function Header({ delete_user, user_state }) {
 
   useEffect(() => {
     content();
-  }, [token, user_state]);
+  }, [ user_state]);
 
   return (
     <div className="header">
