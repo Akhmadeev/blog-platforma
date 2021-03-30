@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList, isLoading }) => {
   const [arrayTags, setArrayTags] = useState(['', '']);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   let count = 0;
 
@@ -55,36 +55,50 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
           <input
             className="createArticle_input"
             name="title"
-            ref={register}
+            ref={register({
+              maxLength: 20,
+              minLength: 3,
+            })}
             defaultValue={inputTitle}
             type="text"
             required
             placeholder="Title"
           />
+          {errors.title && <p className="error">Title должен быть не менее 6 и не более 20 символов </p>}
         </label>
         <label className="createArticle_label">
           <span className="createArticle_input_heading">Short description</span>
           <input
             className="createArticle_input"
             name="description"
-            ref={register}
+            ref={register({
+              maxLength: 60,
+              minLength: 6,
+            })}
             defaultValue={inputDescription}
             type="text"
             required
             placeholder="Short description"
           />
+          {errors.description && (
+            <p className="error">Short description должен быть не менее 6 и не более 60 символов </p>
+          )}
         </label>
         <label className="createArticle_label">
           <span className="createArticle_input_heading">Text</span>
           <textarea
             className="createArticle_input size_xl"
             name="body"
-            ref={register}
+            ref={register({
+              maxLength: 1500,
+              minLength: 6,
+            })}
             defaultValue={inputBody}
             type="text"
             required
             placeholder="Text"
           />
+          {errors.body && <p className="error">Text должен быть не менее 6 и не более 1500 символов </p>}
         </label>
         <label htmlFor="forTags">
           <div className="tabs_form">

@@ -83,7 +83,7 @@ function SignUp({ get_user }) {
               ref={register({
                 required: 'You must specify a password',
                 minLength: {
-                  value: 6,
+                  value: 8,
                   message: 'Password must have at least 6 characters',
                 },
                 maxLength: 40,
