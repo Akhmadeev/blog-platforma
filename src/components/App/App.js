@@ -17,6 +17,7 @@ import EditArticle from '../EditArticle/EditeArticle';
 import SpinErr from '../Error/SpinErr';
 import { articles, articlesSlug, articlesSlugEdit, myArticles, newArticle, profile, loginIn, loginUp } from '../../routeType';
 import { pageState } from '../../storeSelectors';
+import Warning from '../Error/Warning';
 
 function App({ add_items, page, error, get_user }) {
 
@@ -28,7 +29,8 @@ function App({ add_items, page, error, get_user }) {
       Services.getUser().then((result) => {
         get_user(result.user);
         setUserState(result.user);
-      });
+      })
+      .catch(() => <Warning/>)
     }
   }, []);
 

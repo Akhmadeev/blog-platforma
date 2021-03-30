@@ -13,23 +13,27 @@ import { articles, loginIn } from '../../routeType';
 function SignUp({ get_user }) {
   const [logUp, setlogUp] = useState(false);
   const [isloading, setIsLoading] = useState(false)
+  const [sendLoading, setSendLoading] = useState(false)
 
   const token = localStorage.getItem('token');
 
   const { register, handleSubmit, watch, errors } = useForm();
 
   const onSubmit = (data) => {
-    setIsLoading(true)
+    setIsLoading(true);
+    setSendLoading(true);
     const { username, email, password } = data;
 
     Services.sendRequestAuthorization(username, email, password)
       .then((result) => {
         localStorage.setItem('token', JSON.stringify(result.user.token));
-        
         get_user(result.user);
         setlogUp(true);
       })
-      .catch(() => SpinErr());
+      .catch(() => {
+        SpinErr();
+        setSendLoading(false);
+      });
     setIsLoading(false);
   };
 
@@ -72,7 +76,7 @@ function SignUp({ get_user }) {
               className="form_input"
             />
           </label>
-          
+
           <label htmlFor="pass1" className="form_label">
             <span className="label_input_name">Password</span>
             <input
@@ -111,7 +115,7 @@ function SignUp({ get_user }) {
           <input type="checkbox" id="pass2" required className="form_input form_label_checkbox" />
           <span className="input_checkbox_text">I agree to the processing of my personal information</span>
         </label>
-        <input htmlFor="creat_form" value="Create" type="submit" className="btn_form" />
+        <input htmlFor="creat_form" value="Create" type="submit" disabled={sendLoading} className="btn_form" />
         <span className="text_bottom_form">
           Already have an account?{' '}
           <Link to={loginIn} className="link_text_bottom_form">

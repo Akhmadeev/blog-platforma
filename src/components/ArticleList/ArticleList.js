@@ -9,10 +9,9 @@ import SpinErr from '../Error/SpinErr';
 import { pageState, arrayItemState } from '../../storeSelectors';
 
 const ArticleList = ({ arrayItem, edit_page }) => {
-
   if (arrayItem.length < 1) return <div>{SpinErr()}</div>;
 
-  const renderItems = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />)
+  const renderItems = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />);
 
   return (
     <div>
@@ -32,7 +31,7 @@ const ArticleList = ({ arrayItem, edit_page }) => {
 
 const mapStateToProps = (state) => ({
   edit_page: pageState(state),
-  arrayItem: arrayItemState(state)
+  arrayItem: arrayItemState(state),
 });
 
 export default connect(mapStateToProps, action)(ArticleList);

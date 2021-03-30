@@ -8,6 +8,7 @@ import './EditProfile.scss';
 import Services from '../../ApiService';
 import { articles, loginIn } from '../../routeType';
 import { userState } from '../../storeSelectors';
+import Warning from '../Error/Warning';
 
 function EditProfile({ get_user, user_state }) {
 
@@ -19,7 +20,8 @@ function EditProfile({ get_user, user_state }) {
     const { username, email, image } = data;
     Services.sendEditProfile(email, token, username, image).then((res) => {
       setStatus(true);
-      get_user(res.user);
+      get_user(res.user)
+      .catch(() => <Warning/>)
     });
   };
 

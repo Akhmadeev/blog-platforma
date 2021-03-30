@@ -2,29 +2,27 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
-const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList }) => {
+const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList, isLoading }) => {
+  const [arrayTags, setArrayTags] = useState(['', '']);
 
-  const [array, setArray] = useState(['', ''])
-  
   const { register, handleSubmit } = useForm();
 
   let count = 0;
 
   const addTag = () => {
-    const newArray = array.slice();
+    const newArray = arrayTags.slice();
     newArray.push('');
-    setArray(newArray);
-  }
-
+    setArrayTags(newArray);
+  };
 
   const deleteTag = (name) => {
-    const idx = array.indexOf(name);
-    const newArray = [...array.slice(0, idx), ...array.slice(idx + 1)];
-    setArray(newArray)
-  }
+    const idx = arrayTags.indexOf(name);
+    const newArray = [...arrayTags.slice(0, idx), ...arrayTags.slice(idx + 1)];
+    setArrayTags(newArray);
+  };
 
   const tagForm = (name) => {
-    count += 1
+    count += 1;
     return (
       <div key={name + count}>
         <input
@@ -43,8 +41,10 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
   };
 
   useEffect(() => {
-    if(tagList.length > 0) setArray(tagList)
-  }, [])
+    if (tagList.length > 0) setArrayTags(tagList);
+  }, []);
+
+  console.log(isLoading);
 
   return (
     <div className="createArticle">
@@ -91,7 +91,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             <div className="tabs_form_left">
               <div className="createArticle_label">
                 <span className="createArticle_input_heading block">Tags</span>
-                <div>{array.map((value) => tagForm(value))}</div>
+                <div>{arrayTags.map((value) => tagForm(value))}</div>
               </div>
             </div>
             <div className="tabs_form_right">
@@ -101,7 +101,14 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             </div>
           </div>
         </label>
-        <input htmlFor="creat_form" value="Send" type="submit" onClick={handleSubmit(onSubmit)} className="btn_form" />
+        <input
+          htmlFor="creat_form"
+          value="Send"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          disabled={isLoading}
+          className="btn_form"
+        />
       </form>
     </div>
   );
@@ -116,6 +123,7 @@ FormArticle.defaultProps = {
   inputBody: '',
   tagList: [],
   onSubmit: () => {},
+  isLoading: false
 };
 
 FormArticle.propTypes = {
@@ -125,4 +133,5 @@ FormArticle.propTypes = {
   inputBody: PropTypes.string,
   tagList: PropTypes.array,
   onSubmit: PropTypes.func,
+  isLoading: PropTypes.bool,
 };

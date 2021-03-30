@@ -6,6 +6,7 @@ import likeActive from '../../icon/likeActive.svg';
 import likeOff from '../../icon/likeOff.svg';
 import Services from '../../ApiService';
 import ErrorInternet from '../Error/ErrorInternet';
+import Warning from '../Error/Warning';
 
 const FavoriteArticle = ({ slug }) => {
     
@@ -21,7 +22,8 @@ const FavoriteArticle = ({ slug }) => {
         const { favorited, favoritesCount } = result.article;
         setLike(favorited);
         setCountLike(favoritesCount);
-      });
+      })
+      .catch(() => <Warning/>)
     }, []);
 
   const rateArticle = () => {

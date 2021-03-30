@@ -8,20 +8,25 @@ import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
 import { loginIn } from '../../routeType';
 import { userState } from '../../storeSelectors';
+import Warning from '../Error/Warning';
 
 const EditArticle = ({ slugId, user_state }) => {
   const [data, setData] = useState(false);
   const [article, setArticle] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = (obj) => {
     const { title, description, body, ...tagArray } = obj;
-
+    setIsLoading(true);
     const tagList = Object.values(tagArray);
-    Services.editArticle(title, description, body, slugId, tagList).then((result) => {
-      const { slug } = result.article;
-      setData(slug);
-    });
+    Services.editArticle(title, description, body, slugId, tagList)
+      .then((result) => {
+        const { slug } = result.article;
+        setData(slug);
+      })
+      .catch(() => <Warning />);
   };
+  
   useEffect(() => {
     Services.getArticle(slugId).then((result) => {
       setArticle(result.article);
@@ -43,6 +48,7 @@ const EditArticle = ({ slugId, user_state }) => {
       inputTitle={title}
       inputDescription={description}
       inputBody={body}
+      isLoading={isLoading}
       tagList={tagList}
     />
   );

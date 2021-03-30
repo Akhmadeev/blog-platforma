@@ -2,7 +2,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 80px;
+  min-height: 80px;
   width: 100%;
   background-color: #fff;
 }
@@ -14,7 +14,7 @@
   align-items: center;
 }
 .name_platform {
-  width: 147px;
+  max-width: 147px;
   height: 56px;
 
   font-family: 'Roboto', sans-serif;
@@ -45,7 +45,7 @@
   border-radius: 5px;
 }
 .btn_log_out {
-  width: 109px;
+  min-width: 109px;
   height: 51px;
   cursor: pointer;
   color: #262626;
@@ -57,7 +57,7 @@
   border-radius: 5px;
 }
 .btn_create_article {
-  width: 112.23px;
+  min-width: 112.23px;
   height: 31.1px;
   color: #52c41a;
 
@@ -78,7 +78,7 @@
   border-radius: 5px;
 }
 .header_user_info {
-  width: 200px;
+  min-width: 200px;
   display: flex;
 
   align-items: center;

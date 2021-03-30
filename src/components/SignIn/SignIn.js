@@ -12,11 +12,13 @@ import {articles, loginUp} from '../../routeType'
 function SignIn({ get_user }) {
   
   const [status, setStatus] = useState(false);
+  const [sendLoading, setSendLoading] = useState(false);
 
   const token = localStorage.getItem('token');
 
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
+    setSendLoading(true);
     const { email, password } = data;
     Services.sendUserInfo(email, password)
       .then((result) => {
@@ -24,7 +26,10 @@ function SignIn({ get_user }) {
         get_user(result.user);
         setStatus(true);
       })
-      .catch(() => SpinErr());
+      .catch(() => {
+        SpinErr();
+        setSendLoading(false);
+      });
   };
 
   
@@ -60,7 +65,7 @@ function SignIn({ get_user }) {
           </label>
         </div>
 
-        <input htmlFor="creat_form" value="Login" type="submit" className="btn_form" />
+        <input htmlFor="creat_form" value="Login" type="submit" disabled={sendLoading} className="btn_form" />
         <span className="text_bottom_form">
           Already have an account?{' '}
           <Link to={loginUp} className="link_text_bottom_form">

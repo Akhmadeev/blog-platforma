@@ -13,10 +13,11 @@ import { userState } from '../../storeSelectors';
 function CreateArticle({ user_state }) {
 
   const [data, setData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = (obj) => {
     const { title, description, body, ...tagArray } = obj;
-
+    setIsLoading(true)
     const tagList = Object.values(tagArray);
 
     Services.createArticle(title, description, body, tagList)
@@ -31,7 +32,7 @@ function CreateArticle({ user_state }) {
 
   if (data) return <Redirect to={`/articles/${data}`} />;
 
-  return <FormArticle onSubmit={onSubmit} title="Create new article" />;
+  return <FormArticle onSubmit={onSubmit} isLoading={isLoading} title="Create new article" />;
 }
 
 const mapStateToProps = (state) => ({
