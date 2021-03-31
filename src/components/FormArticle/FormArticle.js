@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import classes from './formArticle.module.scss';
 
 const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList, isLoading }) => {
   const [arrayTags, setArrayTags] = useState(['', '']);
@@ -24,16 +25,16 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
   const tagForm = (name) => {
     count += 1;
     return (
-      <div key={name + count}>
+      <div key={name + count} className={classes.tag_block}>
         <input
-          className="createArticle_input size_s"
+          className={`${classes.formArticle_input} ${classes.size_s}`}
           defaultValue={name}
           name={count}
           ref={register}
           type="text"
           placeholder="Tag"
         />
-        <button type="button" onClick={() => deleteTag(name)} className="btn_tags_delete">
+        <button type="button" onClick={() => deleteTag(name)} className={classes.btn_tags_delete}>
           Delete
         </button>
       </div>
@@ -45,13 +46,13 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
   }, []);
 
   return (
-    <div className="createArticle">
-      <form className="createArticle_main">
-        <h3 className="createArticle_title">{title}</h3>
-        <label className="createArticle_label">
-          <span className="createArticle_input_heading">Title</span>
+    <div className={classes.formArticle}>
+      <form className={classes.formArticle_main}>
+        <h3 className={classes.formArticle_title}>{title}</h3>
+        <label className={classes.formArticle_label}>
+          <span className={classes.formArticle_input_heading}>Title</span>
           <input
-            className="createArticle_input"
+            className={classes.formArticle_input}
             name="title"
             ref={register({
               maxLength: 20,
@@ -62,12 +63,12 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             required
             placeholder="Title"
           />
-          {errors.title && <p className="error">Title должен быть не менее 6 и не более 20 символов </p>}
+          {errors.title && <p className={classes.error}>Title должен быть не менее 6 и не более 20 символов </p>}
         </label>
-        <label className="createArticle_label">
-          <span className="createArticle_input_heading">Short description</span>
+        <label className={classes.formArticle_label}>
+          <span className={classes.formArticle_input_heading}>Short description</span>
           <input
-            className="createArticle_input"
+            className={classes.formArticle_input}
             name="description"
             ref={register({
               maxLength: 60,
@@ -79,13 +80,13 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             placeholder="Short description"
           />
           {errors.description && (
-            <p className="error">Short description должен быть не менее 6 и не более 60 символов </p>
+            <p className={classes.error}>Short description должен быть не менее 6 и не более 60 символов </p>
           )}
         </label>
-        <label className="createArticle_label">
-          <span className="createArticle_input_heading">Text</span>
+        <label className={classes.formArticle_label}>
+          <span className={classes.formArticle_input_heading}>Text</span>
           <textarea
-            className="createArticle_input size_xl"
+            className={`${classes.formArticle_input} ${classes.size_xl}`}
             name="body"
             ref={register({
               maxLength: 1500,
@@ -96,18 +97,18 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             required
             placeholder="Text"
           />
-          {errors.body && <p className="error">Text должен быть не менее 6 и не более 1500 символов </p>}
+          {errors.body && <p className={classes.error}>Text должен быть не менее 6 и не более 1500 символов </p>}
         </label>
         <label htmlFor="forTags">
-          <div className="tabs_form">
-            <div className="tabs_form_left">
-              <div className="createArticle_label">
-                <span className="createArticle_input_heading block">Tags</span>
+          <div className={classes.tabs_form}>
+            <div className={classes.tabs_form_left}>
+              <div className={classes.formArticle_label}>
+                <span className={`${classes.formArticle_input_heading} ${classes.block}`}>Tags</span>
                 <div>{arrayTags.map((value) => tagForm(value))}</div>
               </div>
             </div>
-            <div className="tabs_form_right">
-              <button type="button" className="btn_tags_add" onClick={() => addTag()}>
+            <div className={classes.tabs_form_right}>
+              <button type="button" className={classes.btn_tags_add} onClick={() => addTag()}>
                 Add tag
               </button>
             </div>
@@ -119,7 +120,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
           type="submit"
           onClick={handleSubmit(onSubmit)}
           disabled={isLoading}
-          className="btn_form"
+          className={classes.btn_form}
         />
       </form>
     </div>

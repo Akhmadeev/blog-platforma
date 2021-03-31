@@ -2,16 +2,21 @@
   margin-top: 100px;
 }
 .activeItem {
-  width: 938px;
+  max-width: 938px;
   max-height: 807px;
   margin: 0 auto;
   margin-bottom: 26px;
   background: #ffffff;
   border-radius: 5px;
   filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+  @media (max-width: 970px) {
+    margin: 0 20px;
+  }
 }
 .activeItem_header {
   display: flex;
+  margin: 0 24px;
+  justify-content: space-between;
 }
 .article_title_link {
   max-width: 300px;
@@ -22,15 +27,14 @@
   color: #1890ff;
 }
 .activeItem_left {
-  width: 75%;
-  margin: 0 auto;
+  width: 600px;
 }
 .activeItem_right {
-  width: 20%;
+  max-width: 190px;
 }
 .article_btn {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 30px auto;
 }
 .article_btn_delete {
@@ -38,6 +42,7 @@
   height: 31.1px;
   background: #fff;
   color: #f5222d;
+  margin-right: 10px;
 
   border: 1px solid #f5222d;
   box-sizing: border-box;

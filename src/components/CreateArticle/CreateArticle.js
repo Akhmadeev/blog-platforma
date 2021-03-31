@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as action from '../../store/action';
-import './createArticle.scss';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
 import ErrorInternet from '../Error/ErrorInternet';
