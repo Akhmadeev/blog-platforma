@@ -12,6 +12,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 900px) {
+    width: 90%;
+  }
 }
 .name_platform {
   max-width: 147px;
@@ -29,6 +32,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  min-width: 400px;
 }
 .btn {
   width: 109px;
