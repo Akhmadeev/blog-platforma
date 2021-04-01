@@ -6,13 +6,17 @@ import likeActive from '../../icon/likeActive.svg';
 import likeOff from '../../icon/likeOff.svg';
 import Services from '../../ApiService';
 import ErrorInternet from '../Error/ErrorInternet';
-import Warning from '../Error/Warning';
 import { getToken } from '../../localStorageServices';
 
-const FavoriteArticle = ({ slug }) => {
-    
+const FavoriteArticle = ({ slug, count, favoritedLike }) => {
+  
   const [like, setLike] = useState(false);
   const [countLike, setCountLike] = useState(0);
+
+   useEffect(() => {
+     setLike(favoritedLike);
+     setCountLike(count);
+   }, []);
 
   const token = getToken();
 
@@ -20,18 +24,9 @@ const FavoriteArticle = ({ slug }) => {
     message.warning('Требуется авторизация');
   };
 
-  useEffect(() => {
-      Services.getArticle(slug).then((result) => {
-        const { favorited, favoritesCount } = result.article;
-        setLike(favorited);
-        setCountLike(favoritesCount);
-      })
-      .catch(() => <Warning/>)
-    }, []);
-
   const rateArticle = () => {
     if (token) {
-       if (like) {
+      if (like) {
         return Services.favoriteArticle(slug, 'DELETE')
           .then((result) => {
             const { favorited, favoritesCount } = result.article;
@@ -40,15 +35,15 @@ const FavoriteArticle = ({ slug }) => {
           })
           .catch(() => ErrorInternet());
       }
-    return Services.favoriteArticle(slug, 'POST')
-      .then((result) => {
-        const { favorited, favoritesCount } = result.article;
-        setLike(favorited);
-        setCountLike(favoritesCount);
-      })
-      .catch(() => ErrorInternet());
+      return Services.favoriteArticle(slug, 'POST')
+        .then((result) => {
+          const { favorited, favoritesCount } = result.article;
+          setLike(favorited);
+          setCountLike(favoritesCount);
+        })
+        .catch(() => ErrorInternet());
     }
-    return warning()
+    return warning();
   };
 
   return (
@@ -68,9 +63,13 @@ const FavoriteArticle = ({ slug }) => {
 export default FavoriteArticle;
 
 FavoriteArticle.defaultProps = {
-  slug: ''
+  slug: '',
+  count: 0,
+  favoritedLike: false,
 };
 
 FavoriteArticle.propTypes = {
   slug: PropTypes.string,
+  count: PropTypes.number,
+  favoritedLike: PropTypes.bool,
 };

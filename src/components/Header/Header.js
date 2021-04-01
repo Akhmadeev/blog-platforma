@@ -7,20 +7,20 @@ import * as action from '../../store/action';
 import './Header.scss';
 import logo from '../../icon/Rectangle 1.svg';
 import { articles, loginIn, loginUp, myArticles, newArticle, profile } from '../../routeType';
-import { userState, errorState } from '../../storeSelectors';
-import {  removeToken } from '../../localStorageServices';
+import { userState, errorState, authenticationState } from '../../storeSelectors';
+import { removeToken } from '../../localStorageServices';
 
-
-function Header({ delete_user, user_state }) {
+function Header({ delete_user, user_state, authentication_user, authentication }) {
   const { SubMenu } = Menu;
 
   const deleteInfo = () => {
-    removeToken()
+    removeToken();
     delete_user();
+    authentication_user(false);
   };
 
   const content = () => {
-    if (!user_state.id) {
+    if (!authentication) {
       return (
         <nav className="navigation_btn">
           <Link to={loginIn} className="btn styleoff">
@@ -66,7 +66,7 @@ function Header({ delete_user, user_state }) {
 
   useEffect(() => {
     content();
-  }, [ user_state]);
+  }, [user_state, authentication]);
 
   return (
     <div className="header">
@@ -85,6 +85,7 @@ function Header({ delete_user, user_state }) {
 const mapStateToProps = (state) => ({
   error_reducer: errorState(state),
   user_state: userState(state),
+  authentication: authenticationState(state)
 });
 
 export default connect(mapStateToProps, action)(Header);
@@ -92,8 +93,12 @@ export default connect(mapStateToProps, action)(Header);
 Header.defaultProps = {
   delete_user: () => {},
   user_state: {},
+  authentication_user: () => {},
+  authentication: false
 };
 Header.propTypes = {
   delete_user: PropTypes.func,
   user_state: PropTypes.object,
+  authentication_user: PropTypes.func,
+  authentication: PropTypes.bool
 };

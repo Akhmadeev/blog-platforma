@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
@@ -7,11 +7,10 @@ import * as action from '../../store/action';
 import './SignIn.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
-import {articles, loginUp} from '../../routeType'
+import { articles, loginUp } from '../../routeType';
 import { getToken } from '../../localStorageServices';
 
-function SignIn({ get_user }) {
-  
+function SignIn({ get_user, authentication_user }) {
   const [status, setStatus] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
 
@@ -26,6 +25,7 @@ function SignIn({ get_user }) {
         localStorage.setItem('token', JSON.stringify(result.user.token));
         get_user(result.user);
         setStatus(true);
+        authentication_user(true);
       })
       .catch(() => {
         SpinErr();
@@ -33,7 +33,6 @@ function SignIn({ get_user }) {
       });
   };
 
-  
   if (token || status) return <Redirect to={articles} />;
 
   return (
@@ -82,8 +81,10 @@ export default connect(null, action)(SignIn);
 
 SignIn.defaultProps = {
   get_user: () => {},
+  authentication_user: () => {},
 };
 
 SignIn.propTypes = {
   get_user: PropTypes.func,
+  authentication_user: PropTypes.func,
 };

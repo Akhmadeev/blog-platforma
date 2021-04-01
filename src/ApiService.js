@@ -1,7 +1,9 @@
-import { getToken } from "./localStorageServices";
+import { getToken } from './localStorageServices';
 
 class Services {
   baseUrl = 'https://conduit.productionready.io/api';
+
+  token = `Token ${getToken()}`;
 
   requestApi = async (url, options) => {
     const body = await fetch(`${this.baseUrl}${url}`, options);
@@ -10,7 +12,13 @@ class Services {
     return result;
   };
 
-  getArticles = (page) => this.requestApi(`/articles?limit=10&offset=${page}`);
+  getArticles = (page) =>
+    this.requestApi(`/articles?limit=10&offset=${page}`, {
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: this.token,
+      },
+    });
 
   sendEditProfile(email, token, username, image) {
     return this.requestApi(`/user`, {
@@ -26,7 +34,7 @@ class Services {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
       },
     });
   }
@@ -35,7 +43,7 @@ class Services {
     if (localStorage.getItem('token')) {
       return this.requestApi(`/articles/${id}`, {
         headers: {
-          Authorization: `Token ${getToken()}`,
+          Authorization: this.token,
         },
       });
     }
@@ -76,12 +84,10 @@ class Services {
   getUser() {
     return this.requestApi(`/user`, {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
       },
     });
   }
-
-  getTags = () => this.requestApi(`/tags`);
 
   createArticle(title, description, body, tagList) {
     return this.requestApi(`/articles`, {
@@ -95,7 +101,7 @@ class Services {
         },
       }),
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
@@ -113,7 +119,7 @@ class Services {
         },
       }),
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
@@ -123,21 +129,25 @@ class Services {
     return this.requestApi(`/articles/${slug}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
       },
     });
   }
 
-  articlesList = (name) => this.requestApi(`/articles?author=${name}`);
+  articlesList = (name) =>
+    this.requestApi(`/articles?author=${name}`, {
+      headers: {
+        Authorization: this.token,
+      },
+    });
 
   favoriteArticle = (slug, event) =>
     this.requestApi(`/articles/${slug}/favorite`, {
       method: event,
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: this.token,
       },
     });
 }
 
 export default new Services();
-

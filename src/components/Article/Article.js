@@ -45,7 +45,7 @@ const { Text } = Typography;
 
   const item = (element, bool) => {
 
-    const { title, body, slug, updatedAt, tagList } = element;
+    const { title, body, slug, updatedAt, tagList, favorited, favoritesCount } = element;
     const { username, image } = element.author;
 
     
@@ -90,7 +90,7 @@ const { Text } = Typography;
           <div className="activeItem_left">
             <span className="activeItem_header_left_block">
               <span className="article_title_link">{title} </span>
-              <FavoriteArticle slug={slug} />
+              <FavoriteArticle favoritedLike={favorited} count={favoritesCount} slug={slug} />
             </span>
             <span className="item_tag_text">{tagform(tagList)}</span>
             <span className="activeItem_text">{title}</span>

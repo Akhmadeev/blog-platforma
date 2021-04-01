@@ -16,7 +16,6 @@ function SignUp({ get_user, user_state }) {
   const [isloading, setIsLoading] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
 
-
   const { register, handleSubmit, watch, errors } = useForm();
 
   const onSubmit = (data) => {
@@ -24,7 +23,7 @@ function SignUp({ get_user, user_state }) {
     setSendLoading(true);
     const { username, email, password } = data;
 
-   Services.sendRequestAuthorization(username, email, password)
+    Services.sendRequestAuthorization(username, email, password)
       .then((result) => {
         // localStorage.setItem('token', JSON.stringify(result.user.token));
         setToken(JSON.stringify(result.user.token));
@@ -34,7 +33,7 @@ function SignUp({ get_user, user_state }) {
       .catch(() => {
         SpinErr();
       });
-     setIsLoading(false);
+    setIsLoading(false);
   };
 
   const password = useRef({});
@@ -134,7 +133,7 @@ export default connect(mapStateToProps, action)(SignUp);
 
 SignUp.defaultProps = {
   get_user: () => {},
-  user_state: {}
+  user_state: {},
 };
 
 SignUp.propTypes = {

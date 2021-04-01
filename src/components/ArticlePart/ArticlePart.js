@@ -9,7 +9,7 @@ import { shortText  } from '../../utils';
 
 const ArticlePart = ({ element }) => {
   
-  const { title, body, slug, updatedAt, tagList } = element;
+  const { title, body, slug, updatedAt, tagList, favorited, favoritesCount } = element;
   const { username, image } = element.author;
   
   const { Text } = Typography;
@@ -22,7 +22,7 @@ const ArticlePart = ({ element }) => {
       </Text>
     ));
   };
-
+    
   return (
     <div className="item" key={slug}>
       <div className="item_left">
@@ -32,7 +32,7 @@ const ArticlePart = ({ element }) => {
               {title}
             </Link>
           </span>
-          <FavoriteArticle slug={slug} />
+          <FavoriteArticle favoritedLike={favorited} count={favoritesCount} slug={slug} />
         </span>
         <span className="item_tag_text"> {tagform(tagList)}</span>
         <span className="article_text">{shortText(body)}</span>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -15,13 +15,22 @@ import EditProfile from '../EditProfile/EditProfile';
 import MyArticles from '../MyArticles/MyArticles';
 import EditArticle from '../EditArticle/EditeArticle';
 import SpinErr from '../Error/SpinErr';
-import { articles, articlesSlug, articlesSlugEdit, myArticles, newArticle, profile, loginIn, loginUp } from '../../routeType';
+import {
+  articles,
+  articlesSlug,
+  articlesSlugEdit,
+  myArticles,
+  newArticle,
+  profile,
+  loginIn,
+  loginUp,
+} from '../../routeType';
+import PrivateRoute from '../../PrivateRoute';
 import { pageState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
 import { getToken } from '../../localStorageServices';
 
-function App({ add_items, page, error, get_user }) {
-
+function App({ add_items, page, error, get_user, authentication_user }) {
   const [pageNumber, setPageNumber] = useState(1);
   const [userState, setUserState] = useState({});
 
@@ -33,6 +42,7 @@ function App({ add_items, page, error, get_user }) {
         .then((result) => {
           get_user(result.user);
           setUserState(result.user);
+          authentication_user(true);
         })
         .catch(() => <Warning />);
     }
@@ -73,9 +83,9 @@ function App({ add_items, page, error, get_user }) {
             return <EditArticle slugId={slug} />;
           }}
         />
-        <Route path={myArticles} component={MyArticles} />
-        <Route path={newArticle} component={CreateArticle} />
-        <Route path={profile} component={EditProfile} />
+        <PrivateRoute component={MyArticles} path={myArticles} />
+        <PrivateRoute path={newArticle} component={CreateArticle} />
+        <PrivateRoute path={profile} component={EditProfile} />
         <Route path={loginUp} component={SignUp} />
         <Route path={loginIn} component={SignIn} />
       </Router>
@@ -84,7 +94,7 @@ function App({ add_items, page, error, get_user }) {
 }
 
 const mapStateToProps = (state) => ({
-  page: pageState(state)
+  page: pageState(state),
 });
 
 export default connect(mapStateToProps, action)(App);
@@ -94,6 +104,7 @@ App.defaultProps = {
   error: () => {},
   page: 1,
   get_user: () => {},
+  authentication_user: () => {},
 };
 
 App.propTypes = {
@@ -101,4 +112,5 @@ App.propTypes = {
   error: PropTypes.func,
   page: PropTypes.number,
   get_user: PropTypes.func,
+  authentication_user: PropTypes.func,
 };

@@ -6,11 +6,9 @@ import * as action from '../../store/action';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
-import { loginIn } from '../../routeType';
-import { userState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
 
-const EditArticle = ({ slugId, user_state }) => {
+const EditArticle = ({ slugId }) => {
   const [data, setData] = useState(false);
   const [article, setArticle] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +36,6 @@ const EditArticle = ({ slugId, user_state }) => {
 
   if (data) return <Redirect to={`/articles/${data}`} />;
 
-  if (!user_state.id) return <Redirect to={loginIn} />;
-
   if (!article) return SpinErr();
 
   return (
@@ -54,19 +50,14 @@ const EditArticle = ({ slugId, user_state }) => {
     />
   );
 };
-const mapStateToProps = (state) => ({
-  user_state: userState(state)
-});
 
-export default connect(mapStateToProps, action)(EditArticle);
+export default connect(null, action)(EditArticle);
 
 
 EditArticle.defaultProps = {
   slugId: '',
-  user_state: {}
 };
 
 EditArticle.propTypes = {
   slugId: PropTypes.string,
-  user_state: PropTypes.object,
 };

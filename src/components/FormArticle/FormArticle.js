@@ -33,8 +33,9 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
           ref={register}
           type="text"
           placeholder="Tag"
+          disabled={isLoading}
         />
-        <button type="button" onClick={() => deleteTag(name)} className={classes.btn_tags_delete}>
+        <button type="button" disabled={isLoading} onClick={() => deleteTag(name)} className={classes.btn_tags_delete}>
           Delete
         </button>
       </div>
@@ -62,6 +63,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             type="text"
             required
             placeholder="Title"
+            disabled={isLoading}
           />
           {errors.title && <p className={classes.error}>Title должен быть не менее 6 и не более 20 символов </p>}
         </label>
@@ -78,6 +80,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             type="text"
             required
             placeholder="Short description"
+            disabled={isLoading}
           />
           {errors.description && (
             <p className={classes.error}>Short description должен быть не менее 6 и не более 60 символов </p>
@@ -89,13 +92,13 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
             className={`${classes.formArticle_input} ${classes.size_xl}`}
             name="body"
             ref={register({
-              maxLength: 1500,
               minLength: 6,
             })}
             defaultValue={inputBody}
             type="text"
             required
             placeholder="Text"
+            disabled={isLoading}
           />
           {errors.body && <p className={classes.error}>Text должен быть не менее 6 и не более 1500 символов </p>}
         </label>
@@ -108,7 +111,7 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
               </div>
             </div>
             <div className={classes.tabs_form_right}>
-              <button type="button" className={classes.btn_tags_add} onClick={() => addTag()}>
+              <button type="button" className={classes.btn_tags_add} disabled={isLoading} onClick={() => addTag()}>
                 Add tag
               </button>
             </div>

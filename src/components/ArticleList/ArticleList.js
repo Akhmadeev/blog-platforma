@@ -11,11 +11,11 @@ import { pageState, arrayItemState } from '../../storeSelectors';
 const ArticleList = ({ arrayItem, edit_page }) => {
   if (arrayItem.length < 1) return <div>{SpinErr()}</div>;
 
-  const renderItems = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />);
+  const renderArticle = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />);
 
   return (
     <div>
-      <div className="list">{arrayItem && renderItems()}</div>
+      <div className="list">{arrayItem && renderArticle()}</div>
       <div className="pagination">
         <Pagination
           size="small"
