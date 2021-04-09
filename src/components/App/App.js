@@ -25,7 +25,7 @@ import {
   loginIn,
   loginUp,
 } from '../../routeType';
-import PrivateRoute from '../../PrivateRoute';
+import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import { pageState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
 import { getToken } from '../../localStorageServices';

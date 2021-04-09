@@ -3,9 +3,9 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as action from './store/action/index';
-import { loginIn } from './routeType';
-import { authenticationState } from './storeSelectors';
+import * as action from '../../store/action';
+import { loginIn } from '../../routeType';
+import { authenticationState } from '../../storeSelectors';
 
 const PrivateRoute = ({ component: Component, authentication, ...rest }) => (
   <Route

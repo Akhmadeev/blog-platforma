@@ -12,13 +12,17 @@ class Services {
     return result;
   };
 
-  getArticles = (page) =>
-    this.requestApi(`/articles?limit=10&offset=${page}`, {
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Authorization: this.token,
-      },
-    });
+  getArticles = (page) => {
+    if (getToken()) {
+      return this.requestApi(`/articles?limit=10&offset=${page}`, {
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          Authorization: this.token,
+        },
+      });
+    }
+    return this.requestApi(`/articles?limit=10&offset=${page}`);
+  };
 
   sendEditProfile(email, token, username, image) {
     return this.requestApi(`/user`, {

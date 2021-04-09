@@ -49,82 +49,84 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
   return (
     <div className={classes.formArticle}>
       <form className={classes.formArticle_main}>
-        <h3 className={classes.formArticle_title}>{title}</h3>
-        <label className={classes.formArticle_label}>
-          <span className={classes.formArticle_input_heading}>Title</span>
-          <input
-            className={classes.formArticle_input}
-            name="title"
-            ref={register({
-              maxLength: 20,
-              minLength: 3,
-            })}
-            defaultValue={inputTitle}
-            type="text"
-            required
-            placeholder="Title"
-            disabled={isLoading}
-          />
-          {errors.title && <p className={classes.error}>Title должен быть не менее 6 и не более 20 символов </p>}
-        </label>
-        <label className={classes.formArticle_label}>
-          <span className={classes.formArticle_input_heading}>Short description</span>
-          <input
-            className={classes.formArticle_input}
-            name="description"
-            ref={register({
-              maxLength: 60,
-              minLength: 6,
-            })}
-            defaultValue={inputDescription}
-            type="text"
-            required
-            placeholder="Short description"
-            disabled={isLoading}
-          />
-          {errors.description && (
-            <p className={classes.error}>Short description должен быть не менее 6 и не более 60 символов </p>
-          )}
-        </label>
-        <label className={classes.formArticle_label}>
-          <span className={classes.formArticle_input_heading}>Text</span>
-          <textarea
-            className={`${classes.formArticle_input} ${classes.size_xl}`}
-            name="body"
-            ref={register({
-              minLength: 6,
-            })}
-            defaultValue={inputBody}
-            type="text"
-            required
-            placeholder="Text"
-            disabled={isLoading}
-          />
-          {errors.body && <p className={classes.error}>Text должен быть не менее 6 и не более 1500 символов </p>}
-        </label>
-        <label htmlFor="forTags">
-          <div className={classes.tabs_form}>
-            <div className={classes.tabs_form_left}>
-              <div className={classes.formArticle_label}>
-                <span className={`${classes.formArticle_input_heading} ${classes.block}`}>Tags</span>
-                <div>{arrayTags.map((value) => tagForm(value))}</div>
+        <fieldset disabled={isLoading}>
+          <h3 className={classes.formArticle_title}>{title}</h3>
+          <label className={classes.formArticle_label}>
+            <span className={classes.formArticle_input_heading}>Title</span>
+            <input
+              className={classes.formArticle_input}
+              name="title"
+              ref={register({
+                maxLength: 20,
+                minLength: 3,
+              })}
+              defaultValue={inputTitle}
+              type="text"
+              required
+              placeholder="Title"
+              disabled={isLoading}
+            />
+            {errors.title && <p className={classes.error}>Title должен быть не менее 6 и не более 20 символов </p>}
+          </label>
+          <label className={classes.formArticle_label}>
+            <span className={classes.formArticle_input_heading}>Short description</span>
+            <input
+              className={classes.formArticle_input}
+              name="description"
+              ref={register({
+                maxLength: 60,
+                minLength: 6,
+              })}
+              defaultValue={inputDescription}
+              type="text"
+              required
+              placeholder="Short description"
+              disabled={isLoading}
+            />
+            {errors.description && (
+              <p className={classes.error}>Short description должен быть не менее 6 и не более 60 символов </p>
+            )}
+          </label>
+          <label className={classes.formArticle_label}>
+            <span className={classes.formArticle_input_heading}>Text</span>
+            <textarea
+              className={`${classes.formArticle_input} ${classes.size_xl}`}
+              name="body"
+              ref={register({
+                minLength: 6,
+              })}
+              defaultValue={inputBody}
+              type="text"
+              required
+              placeholder="Text"
+              disabled={isLoading}
+            />
+            {errors.body && <p className={classes.error}>Text должен быть не менее 6 и не более 1500 символов </p>}
+          </label>
+          <label htmlFor="forTags">
+            <div className={classes.tabs_form}>
+              <div className={classes.tabs_form_left}>
+                <div className={classes.formArticle_label}>
+                  <span className={`${classes.formArticle_input_heading} ${classes.block}`}>Tags</span>
+                  <div>{arrayTags.map((value) => tagForm(value))}</div>
+                </div>
+              </div>
+              <div className={classes.tabs_form_right}>
+                <button type="button" className={classes.btn_tags_add} disabled={isLoading} onClick={() => addTag()}>
+                  Add tag
+                </button>
               </div>
             </div>
-            <div className={classes.tabs_form_right}>
-              <button type="button" className={classes.btn_tags_add} disabled={isLoading} onClick={() => addTag()}>
-                Add tag
-              </button>
-            </div>
-          </div>
-        </label>
-        <input
-          htmlFor="creat_form"
-          value="Send"
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-          disabled={isLoading}
-          className={classes.btn_form}
-        />
+          </label>
+          <input
+            htmlFor="creat_form"
+            value="Send"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading}
+            className={classes.btn_form}
+          />
+        </fieldset>
       </form>
     </div>
   );
