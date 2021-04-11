@@ -12,15 +12,13 @@ import { setToken } from '../../localStorageServices';
 import { userState } from '../../storeSelectors';
 
 function SignUp({ get_user, user_state, authentication_user }) {
-  const [logUp, setlogUp] = useState(false);
+
   const [isloading, setIsLoading] = useState(false);
-  const [sendLoading, setSendLoading] = useState(false);
 
   const { register, handleSubmit, watch, errors } = useForm();
 
   const onSubmit = (data) => {
     setIsLoading(true);
-    setSendLoading(true);
     const { username, email, password } = data;
 
     Services.sendRequestAuthorization(username, email, password)
@@ -28,24 +26,26 @@ function SignUp({ get_user, user_state, authentication_user }) {
         // localStorage.setItem('token', JSON.stringify(result.user.token));
         setToken(JSON.stringify(result.user.token));
         get_user(result.user);
-        setlogUp(true);
         authentication_user(true);
       })
       .catch(() => {
         SpinErr();
       });
-    setIsLoading(false);
   };
 
   const password = useRef({});
   password.current = watch('password', '');
 
-  if (user_state.id || (logUp && !isloading)) return <Redirect to={articles} />;
+  const classes = ['form_sign']
 
-  if (isloading) return SpinErr();
+  if (isloading) {
+    classes.push('form_disabled');
+  }
+
+  if (user_state.id) return <Redirect to={articles} />;
 
   return (
-    <div className="form_sign">
+    <div className={classes.join(' ')}>
       <form className="form_sign_up" id="creat_form" onSubmit={handleSubmit(onSubmit)}>
         <fieldset disabled={isloading}>
           <h3 className="form_title">Create new account </h3>
@@ -115,7 +115,7 @@ function SignUp({ get_user, user_state, authentication_user }) {
             <input type="checkbox" id="pass2" required className="form_input form_label_checkbox" />
             <span className="input_checkbox_text">I agree to the processing of my personal information</span>
           </label>
-          <input htmlFor="creat_form" value="Create" type="submit" disabled={sendLoading} className="btn_form" />
+          <input htmlFor="creat_form" value="Create" type="submit" disabled={isloading} className="btn_form" />
           <span className="text_bottom_form">
             Already have an account?{' '}
             <Link to={loginIn} className="link_text_bottom_form">

@@ -16,6 +16,8 @@ function EditProfile({ get_user, user_state }) {
   const [status, setStatus] = useState(false)
   const token = getToken();
 
+  const classes = ['form_sign'];
+
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     const { username, email, image } = data;
@@ -29,12 +31,16 @@ function EditProfile({ get_user, user_state }) {
 
   if (!user_state.id) return <Redirect to={loginIn} />;
 
+  if (status) {
+    classes.push('form_disabled');
+  }
+
     if (status) {
       return <Redirect to={articles} />;
     }
 
   return (
-    <div className="form_sign">
+    <div className={classes.join(' ')}>
       <form className="form_sign_up" id="creat_form" onSubmit={handleSubmit(onSubmit)}>
         <h3 className="form_title">Edit Profile</h3>
 

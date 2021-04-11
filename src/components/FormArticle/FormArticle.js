@@ -4,11 +4,18 @@ import { useForm } from 'react-hook-form';
 import classes from './formArticle.module.scss';
 
 const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody, tagList, isLoading }) => {
+
   const [arrayTags, setArrayTags] = useState(['', '']);
 
   const { register, handleSubmit, errors } = useForm();
 
+  
+  useEffect(() => {
+    if (tagList.length > 0) setArrayTags(tagList);
+  }, []);
+
   let count = 0;
+  let classes_block = `${classes.formArticle}`;
 
   const addTag = () => {
     const newArray = arrayTags.slice();
@@ -42,12 +49,12 @@ const FormArticle = ({ title, onSubmit, inputTitle, inputDescription, inputBody,
     );
   };
 
-  useEffect(() => {
-    if (tagList.length > 0) setArrayTags(tagList);
-  }, []);
+  if (isLoading) {
+    classes_block = `${classes.formArticle} ${classes.form_disabled}`;
+  }
 
   return (
-    <div className={classes.formArticle}>
+    <div className={classes_block}>
       <form className={classes.formArticle_main}>
         <fieldset disabled={isLoading}>
           <h3 className={classes.formArticle_title}>{title}</h3>

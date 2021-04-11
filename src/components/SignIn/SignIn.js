@@ -15,6 +15,7 @@ function SignIn({ get_user, authentication_user }) {
   const [sendLoading, setSendLoading] = useState(false);
 
   const token = getToken();
+  const classes = ['form_sign'];
 
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
@@ -33,10 +34,12 @@ function SignIn({ get_user, authentication_user }) {
       });
   };
 
+  if (sendLoading) classes.push('form_disabled');
+  
   if (token || status) return <Redirect to={articles} />;
 
   return (
-    <div className="form_sign">
+    <div className={classes.join(' ')}>
       <form className="form_sign_in" id="creat_form" onSubmit={handleSubmit(onSubmit)}>
         <h3 className="form_title">Sign In</h3>
 
