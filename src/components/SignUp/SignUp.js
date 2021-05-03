@@ -1,17 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { connect } from 'react-redux';
-import * as action from '../../store/action';
+import { useDispatch, useSelector } from 'react-redux';
 import './SignUp.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
 import { articles, loginIn } from '../../routeType';
 import { setToken } from '../../localStorageServices';
-import { userState } from '../../storeSelectors';
+import { get_user, authentication_user } from '../../reduxToolkit/toolkitSlice';
 
-function SignUp({ get_user, user_state, authentication_user }) {
+function SignUp() {
+  const user = useSelector((state) => state.toolkit.user);
+  const dispatch = useDispatch();
 
   const [isloading, setIsLoading] = useState(false);
 
@@ -25,8 +25,8 @@ function SignUp({ get_user, user_state, authentication_user }) {
       .then((result) => {
         // localStorage.setItem('token', JSON.stringify(result.user.token));
         setToken(JSON.stringify(result.user.token));
-        get_user(result.user);
-        authentication_user(true);
+        dispatch(get_user(result.user));
+        dispatch(authentication_user(true));
       })
       .catch(() => {
         SpinErr();
@@ -36,13 +36,13 @@ function SignUp({ get_user, user_state, authentication_user }) {
   const password = useRef({});
   password.current = watch('password', '');
 
-  const classes = ['form_sign']
+  const classes = ['form_sign'];
 
   if (isloading) {
     classes.push('form_disabled');
   }
 
-  if (user_state.id) return <Redirect to={articles} />;
+  if (user.id) return <Redirect to={articles} />;
 
   return (
     <div className={classes.join(' ')}>
@@ -128,20 +128,4 @@ function SignUp({ get_user, user_state, authentication_user }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  user_state: userState(state),
-});
-
-export default connect(mapStateToProps, action)(SignUp);
-
-SignUp.defaultProps = {
-  get_user: () => {},
-  authentication_user: () => {},
-  user_state: {},
-};
-
-SignUp.propTypes = {
-  get_user: PropTypes.func,
-  user_state: PropTypes.object,
-  authentication_user: PropTypes.func,
-};
+export default SignUp;

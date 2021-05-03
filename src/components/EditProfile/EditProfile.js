@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { connect } from 'react-redux';
-import * as action from '../../store/action';
 import './EditProfile.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import Services from '../../ApiService';
 import { articles, loginIn } from '../../routeType';
-import { userState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
 import { getToken } from '../../localStorageServices';
+import { get_user } from '../../reduxToolkit/toolkitSlice';
 
-function EditProfile({ get_user, user_state }) {
-
-  const [status, setStatus] = useState(false)
+function EditProfile() {
+  const [status, setStatus] = useState(false);
   const token = getToken();
+
+  const user_state = useSelector((state) => state.toolkit.user);
+  const dispatch = useDispatch();
 
   const classes = ['form_sign'];
 
@@ -24,7 +24,7 @@ function EditProfile({ get_user, user_state }) {
     Services.sendEditProfile(email, token, username, image)
       .then((res) => {
         setStatus(true);
-        get_user(res.user);
+        dispatch(get_user(res.user));
       })
       .catch(() => <Warning />);
   };
@@ -35,9 +35,9 @@ function EditProfile({ get_user, user_state }) {
     classes.push('form_disabled');
   }
 
-    if (status) {
-      return <Redirect to={articles} />;
-    }
+  if (status) {
+    return <Redirect to={articles} />;
+  }
 
   return (
     <div className={classes.join(' ')}>
@@ -109,17 +109,4 @@ function EditProfile({ get_user, user_state }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  user_state: userState(state)
-});
-
-export default connect(mapStateToProps, action)(EditProfile);
-
-EditProfile.defaultProps = {
-  get_user: () => { },
-  user_state: {},
-};
-EditProfile.propTypes = {
-  get_user: PropTypes.func,
-  user_state: PropTypes.object
-};
+export default EditProfile;

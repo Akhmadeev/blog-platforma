@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as action from '../../store/action';
 import FormArticle from '../FormArticle/FormArticle';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
@@ -24,12 +22,13 @@ const EditArticle = ({ slugId }) => {
       })
       .catch(() => <Warning />);
   };
-  
+
   useEffect(() => {
-    Services.getArticle(slugId).then((result) => {
-      setArticle(result.article);
-    })
-    .catch(() => Warning())
+    Services.getArticle(slugId)
+      .then((result) => {
+        setArticle(result.article);
+      })
+      .catch(() => Warning());
   }, []);
 
   const { title, body, description, tagList } = article;
@@ -51,8 +50,7 @@ const EditArticle = ({ slugId }) => {
   );
 };
 
-export default connect(null, action)(EditArticle);
-
+export default EditArticle;
 
 EditArticle.defaultProps = {
   slugId: '',

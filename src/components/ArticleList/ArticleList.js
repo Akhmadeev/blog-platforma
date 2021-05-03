@@ -1,15 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Pagination} from 'antd';
-import * as action from '../../store/action';
+import { useSelector } from 'react-redux';
+import { Pagination } from 'antd';
 import ArticlePart from '../ArticlePart/ArticlePart';
 import './ArticleList.scss';
 import SpinErr from '../Error/SpinErr';
-import { pageState, arrayItemState } from '../../storeSelectors';
 
-const ArticleList = ({ arrayItem, edit_page }) => {
-  if (arrayItem.length < 1) return <div>{SpinErr()}</div>;
+const ArticleList = () => {
+  const edit_page = useSelector((state) => state.toolkit.page);
+  const arrayItem = useSelector((state) => state.toolkit.allArticles[0]);
+
+  if (!arrayItem) return <div>{SpinErr()}</div>;
 
   const renderArticle = () => arrayItem.map((element) => <ArticlePart key={element.slug} element={element} />);
 
@@ -29,19 +29,4 @@ const ArticleList = ({ arrayItem, edit_page }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  edit_page: pageState(state),
-  arrayItem: arrayItemState(state),
-});
-
-export default connect(mapStateToProps, action)(ArticleList);
-
-ArticleList.defaultProps = {
-  arrayItem: [],
-  edit_page: () => {},
-};
-
-ArticleList.propTypes = {
-  arrayItem: PropTypes.array,
-  edit_page: PropTypes.func,
-};
+export default ArticleList;

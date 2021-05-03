@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { connect } from 'react-redux';
-import * as action from '../../store/action';
+import { useDispatch } from 'react-redux';
 import './SignIn.scss';
 import Services from '../../ApiService';
 import SpinErr from '../Error/SpinErr';
 import { articles, loginUp } from '../../routeType';
 import { getToken } from '../../localStorageServices';
+import { get_user, authentication_user } from '../../reduxToolkit/toolkitSlice';
 
-function SignIn({ get_user, authentication_user }) {
+function SignIn() {
   const [status, setStatus] = useState(false);
   const [sendLoading, setSendLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const token = getToken();
   const classes = ['form_sign'];
@@ -24,9 +25,9 @@ function SignIn({ get_user, authentication_user }) {
     Services.sendUserInfo(email, password)
       .then((result) => {
         localStorage.setItem('token', JSON.stringify(result.user.token));
-        get_user(result.user);
+        dispatch(get_user(result.user));
         setStatus(true);
-        authentication_user(true);
+        dispatch(authentication_user(true));
       })
       .catch(() => {
         SpinErr();
@@ -35,7 +36,7 @@ function SignIn({ get_user, authentication_user }) {
   };
 
   if (sendLoading) classes.push('form_disabled');
-  
+
   if (token || status) return <Redirect to={articles} />;
 
   return (
@@ -80,14 +81,4 @@ function SignIn({ get_user, authentication_user }) {
   );
 }
 
-export default connect(null, action)(SignIn);
-
-SignIn.defaultProps = {
-  get_user: () => {},
-  authentication_user: () => {},
-};
-
-SignIn.propTypes = {
-  get_user: PropTypes.func,
-  authentication_user: PropTypes.func,
-};
+export default SignIn;

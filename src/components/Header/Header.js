@@ -1,22 +1,26 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
-import * as action from '../../store/action';
 import './Header.scss';
 import logo from '../../icon/Rectangle 1.svg';
 import { articles, loginIn, loginUp, myArticles, newArticle, profile } from '../../routeType';
-import { userState, errorState, authenticationState } from '../../storeSelectors';
 import { removeToken } from '../../localStorageServices';
+import { delete_user, authentication_user } from '../../reduxToolkit/toolkitSlice';
 
-function Header({ delete_user, user_state, authentication_user, authentication }) {
+function Header() {
   const { SubMenu } = Menu;
+
+  // const error_reducer = useSelector((state) => state.toolkit.error_reducer);
+  const user_state = useSelector((state) => state.toolkit.user);
+  const authentication = useSelector((state) => state.toolkit.authentication);
+
+  const dispatch = useDispatch();
 
   const deleteInfo = () => {
     removeToken();
-    delete_user();
-    authentication_user(false);
+    dispatch(delete_user());
+    dispatch(authentication_user(false));
   };
 
   const content = () => {
@@ -82,23 +86,4 @@ function Header({ delete_user, user_state, authentication_user, authentication }
   );
 }
 
-const mapStateToProps = (state) => ({
-  error_reducer: errorState(state),
-  user_state: userState(state),
-  authentication: authenticationState(state)
-});
-
-export default connect(mapStateToProps, action)(Header);
-
-Header.defaultProps = {
-  delete_user: () => {},
-  user_state: {},
-  authentication_user: () => {},
-  authentication: false
-};
-Header.propTypes = {
-  delete_user: PropTypes.func,
-  user_state: PropTypes.object,
-  authentication_user: PropTypes.func,
-  authentication: PropTypes.bool
-};
+export default Header;

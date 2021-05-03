@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as action from '../../store/action';
+import { useSelector, useDispatch } from 'react-redux';
 import './App.scss';
 import Header from '../Header/Header';
 import ArticleList from '../ArticleList/ArticleList';
@@ -26,23 +24,26 @@ import {
   loginUp,
 } from '../../routeType';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
-import { pageState } from '../../storeSelectors';
 import Warning from '../Error/Warning';
 import { getToken } from '../../localStorageServices';
+import { add_items, error, get_user, authentication_user } from '../../reduxToolkit/toolkitSlice';
 
-function App({ add_items, page, error, get_user, authentication_user }) {
+function App() {
   const [pageNumber, setPageNumber] = useState(1);
   const [userState, setUserState] = useState({});
 
   const token = getToken();
 
+  const page = useSelector((state) => state.toolkit.page);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (token) {
       Services.getUser()
         .then((result) => {
-          get_user(result.user);
+          dispatch(get_user(result.user));
           setUserState(result.user);
-          authentication_user(true);
+          dispatch(authentication_user(true));
         })
         .catch(() => <Warning />);
     }
@@ -51,11 +52,9 @@ function App({ add_items, page, error, get_user, authentication_user }) {
   useEffect(() => {
     const offset = page * 10 - 10;
     setPageNumber(offset);
-    Services.getArticles(pageNumber, add_items, error)
-      .then((result) => {
-        add_items(result.articles);
-      })
-      .catch(() => error());
+    Services.getArticles(pageNumber)
+      .then((result) => dispatch(add_items(result.articles)))
+      .catch(() => dispatch(error()));
   }, [page]);
 
   if (token) {
@@ -93,24 +92,20 @@ function App({ add_items, page, error, get_user, authentication_user }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  page: pageState(state),
-});
+export default App;
 
-export default connect(mapStateToProps, action)(App);
+// App.defaultProps = {
+//   add_items: () => {},
+//   error: () => {},
+//   page: 1,
+//   get_user: () => {},
+//   authentication_user: () => {},
+// };
 
-App.defaultProps = {
-  add_items: () => {},
-  error: () => {},
-  page: 1,
-  get_user: () => {},
-  authentication_user: () => {},
-};
-
-App.propTypes = {
-  add_items: PropTypes.func,
-  error: PropTypes.func,
-  page: PropTypes.number,
-  get_user: PropTypes.func,
-  authentication_user: PropTypes.func,
-};
+// App.propTypes = {
+//   add_items: PropTypes.func,
+//   error: PropTypes.func,
+//   page: PropTypes.number,
+//   get_user: PropTypes.func,
+//   authentication_user: PropTypes.func,
+// };

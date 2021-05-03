@@ -1,37 +1,34 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Modal, Typography, Button } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
-import * as action from '../../store/action';
 import './Article.scss';
+import { useSelector } from 'react-redux';
 import Services from '../../ApiService';
 import FavoriteArticle from '../FavoriteArticle/FavoriteArticle';
 import SpinErr from '../Error/SpinErr';
 import { myArticles } from '../../routeType';
-import { userState } from '../../storeSelectors';
 
-
-const Article = ({ itemId,  user }) => {
+const Article = ({ itemId }) => {
+  const user = useSelector((state) => state.toolkit.user);
   const [guest, setGuest] = useState(true);
   const [article, setArticle] = useState([]);
   const [nameArticle, setNameArticle] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  
-const { Text } = Typography;
+  const { Text } = Typography;
 
-    useEffect(() => {
-      Services.getArticle(itemId)
-        .then((result) => {
-          if (result.article.author.username === user.username) setGuest(false);
-          setNameArticle(result.article.slug);
-          return setArticle(result.article);
-        })
-        .catch(() => <SpinErr />);
-    }, []);
+  useEffect(() => {
+    Services.getArticle(itemId)
+      .then((result) => {
+        if (result.article.author.username === user.username) setGuest(false);
+        setNameArticle(result.article.slug);
+        return setArticle(result.article);
+      })
+      .catch(() => <SpinErr />);
+  }, []);
 
   const tagform = (tag) => {
     if (tag.length < 1) return 'no tags';
@@ -42,47 +39,43 @@ const { Text } = Typography;
     ));
   };
 
-
   const item = (element, bool) => {
-
     const { title, body, slug, updatedAt, tagList, favorited, favoritesCount } = element;
     const { username, image } = element.author;
 
-    
-  const removeArticle = () => {
-    Services.deleteArticle(slug)
-      .then(() => setArticle('Redirect'))
-      .catch(() => SpinErr);
-  };
+    const removeArticle = () => {
+      Services.deleteArticle(slug)
+        .then(() => setArticle('Redirect'))
+        .catch(() => SpinErr);
+    };
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+    const showModal = () => {
+      setIsModalVisible(true);
+    };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-    removeArticle();
-  };
+    const handleOk = () => {
+      setIsModalVisible(false);
+      removeArticle();
+    };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+    const handleCancel = () => {
+      setIsModalVisible(false);
+    };
 
-  const btnService = () => (
-    <div className="article_btn">
-      <Button className="article_btn_delete" onClick={showModal}>
-        Delete
-      </Button>
-      <Modal title="Warning" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <p>Вы точно хотите удалить статью???</p>
-      </Modal>
+    const btnService = () => (
+      <div className="article_btn">
+        <Button className="article_btn_delete" onClick={showModal}>
+          Delete
+        </Button>
+        <Modal title="Warning" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+          <p>Вы точно хотите удалить статью???</p>
+        </Modal>
 
-      <button className="article_btn_editing" onClick={() => setArticle('Redirect_editeArticle')} type="button">
-        Edit
-      </button>
-    </div>
-  );
-
+        <button className="article_btn_editing" onClick={() => setArticle('Redirect_editeArticle')} type="button">
+          Edit
+        </button>
+      </div>
+    );
 
     return (
       <div className="activeItem" key={slug}>
@@ -116,26 +109,20 @@ const { Text } = Typography;
   };
 
   if (article === 'Redirect') return <Redirect to={myArticles} />;
-  
+
   if (article === 'Redirect_editeArticle') return <Redirect to={`/articles/${nameArticle}/edit`} />;
 
-  if (article.length < 1 ) return <div>{SpinErr()}</div>;
+  if (article.length < 1) return <div>{SpinErr()}</div>;
 
   return <div className="activeItem_block">{article && item(article, guest)}</div>;
 };
 
-const mapStateToProps = (state) => ({
-  user: userState(state)
-});
-
-export default connect(mapStateToProps, action)(Article);
+export default Article;
 
 Article.defaultProps = {
-  user: {},
   itemId: '',
 };
 
 Article.propTypes = {
-  user: PropTypes.object,
   itemId: PropTypes.string,
 };
